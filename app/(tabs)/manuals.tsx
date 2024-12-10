@@ -13,7 +13,7 @@ export default function Manuals() {
         style={{
           fontFamily: 'RobotoSlab-Regular'
         }}
-      >Edit app/(tabs)/manuals.tsx to edit this screen.</Text>
+      >On this screen, the pdfs of the manuals will be displayed.</Text>
     </View>
   );
 }

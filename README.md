@@ -1,4 +1,4 @@
-# DURF-Tracker
+# DURF-Tracker (WIP)
 React Native App to keep track of [DURF](https://emielboven.itch.io/durf) characters.
 
 ## Tech-Stack & Languages

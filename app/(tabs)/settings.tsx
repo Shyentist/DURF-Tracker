@@ -13,7 +13,7 @@ export default function Settings() {
         style={{
           fontFamily: 'RobotoSlab-Regular'
         }}
-      >Edit app/(tabs)/settings.tsx to edit this screen.</Text>
+      >It seemed like a good idea to have Settings, though I have no idea what Settings there will be.</Text>
     </View>
   );
 }
