@@ -38,7 +38,7 @@ const styles = StyleSheet.create({
     width: 60,
     height: 60,
     borderRadius: 30, // attempt at making it round
-    backgroundColor: '#ffde21', // yellow (or customize as needed)
+    backgroundColor: '#FFDE21', // yellow (or customize as needed)
     justifyContent: 'center',
     alignItems: 'center',
     shadowColor: '#000',
