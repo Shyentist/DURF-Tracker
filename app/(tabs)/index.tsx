@@ -57,7 +57,6 @@ export default function Index() {
       will: 1,
       description: "Your character's description.",
       biography: "Your character's biography.",
-      inventorySlots: 11,
       inventory: [],
       spells: []
     };

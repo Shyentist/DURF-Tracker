@@ -7,7 +7,6 @@ export type CharacterType = {
     will: number;
     description: string;
     biography: string;
-    inventorySlots: number;
     inventory: string[];
     spells: string[]
 };

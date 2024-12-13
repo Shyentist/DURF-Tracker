@@ -49,12 +49,12 @@ export default function CharacterDetail() {
       <ScrollView>
         <Text style={styles.header}>{character.name}</Text>
         <Text>Level: {character.level}</Text>
-        <Text>Strength: {character.strength}</Text>
-        <Text>Dexterity: {character.dexterity}</Text>
-        <Text>Will: {character.will}</Text>
+        <Text>STR: {character.strength}</Text>
+        <Text>DEX: {character.dexterity}</Text>
+        <Text>WIL: {character.will}</Text>
         <Text>Description: {character.description}</Text>
         <Text>Biography: {character.biography}</Text>
-        <Text>Inventory Slots: {character.inventorySlots}</Text>
+        <Text>Inventory Slots: {10 + character.strength}</Text>
         <Text>Inventory: {character.inventory}</Text>
         <Text>Spells: {character.spells}</Text>
       </ScrollView>
