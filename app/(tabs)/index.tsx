@@ -10,7 +10,7 @@ import { CharacterType } from '@/types/CharacterType';
 export default function Index() {
   const [characters, setCharacters] = useState<CharacterType[]>([]);
 
-  /* for testing purposes, button to delete all characters
+  /* for testing purposes, button to delete all characters 
   
   const clearStorage = async () => {
     try {
@@ -101,7 +101,7 @@ export default function Index() {
         data={characters}
         renderItem={renderItem}
         keyExtractor={(item, index) => index.toString()}
-        numColumns={3}
+        numColumns={2}
         columnWrapperStyle={styles.row}
         ListEmptyComponent={renderNoCharacters} // display message when no characters exist
         style={styles.characterList}
@@ -138,17 +138,21 @@ const styles = StyleSheet.create({
   characterCard: {
     alignItems: 'center',
     marginBottom: 20,
-    width: '30%', // each card occupies 30% width of the row
-    justifyContent: 'center'
+    width: '45%',
+    justifyContent: 'center',
+    //borderRadius: 10, // I'm not sure about this, maybe with other colors
+    //backgroundColor: '#f5f5f5', // as above
+    padding: 10,
+    elevation: 2,
   },
   iconContainer: {
     width: 60,
     height: 60,
-    borderRadius: 30,
+    borderRadius: 10,
     backgroundColor: '#FFDE21',
     justifyContent: 'center',
     alignItems: 'center',
-    alignSelf: 'center'
+    alignSelf: 'center',
   },
   characterName: {
     marginTop: 10,

@@ -109,12 +109,17 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 20,
     right: 20,
-    width: 40,
-    height: 40,
-    borderRadius: 20,
+    width: 60,
+    height: 60,
+    borderRadius: 30,
     backgroundColor: '#FFDE21',
     justifyContent: 'center',
     alignItems: 'center',
-    zIndex: 1, // above other content
-  },
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 3,
+    elevation: 5, // for Android shadow
+    zIndex: 1
+  }
 });
