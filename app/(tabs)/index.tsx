@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Button, Text, StyleSheet, View, TouchableOpacity, FlatList } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Ionicons } from '@expo/vector-icons';
-import { Link } from 'expo-router';
+import { Link, useFocusEffect } from 'expo-router';
 
 import { CharacterType } from '@/types/CharacterType';
 
@@ -28,26 +28,26 @@ export default function Index() {
       
   */
 
-  useEffect(() => {
-    // load saved characters when the component mounts
-    const loadCharacters = async () => {
-      try {
-        const savedCharacters = await AsyncStorage.getItem('characters');
-        if (savedCharacters) {
-          setCharacters(JSON.parse(savedCharacters));
-        }
-      } catch (error) {
-        console.error('Error loading characters:', error);
+  const loadCharacters = async () => {
+    try {
+      setCharacters([]);
+      const savedCharacters = await AsyncStorage.getItem('characters');
+      if (savedCharacters) {
+        setCharacters(JSON.parse(savedCharacters));
       }
-    };
+    } catch (error) {
+      console.error('Error loading characters:', error);
+    }
+  };
 
-    loadCharacters();
-  }, []);
+  useFocusEffect(
+    React.useCallback(() => {
+      loadCharacters();
+    }, [])
+  );
 
   // the + button creates a default character and saves it (adds to other saved characters)
-  const handlePress = async () => {
-    console.log('Create New Character button pressed!');
-    
+  const handlePress = async () => {    
     const newCharacter: CharacterType = {
       id: `${Date.now()}`,
       name: 'New Character',
