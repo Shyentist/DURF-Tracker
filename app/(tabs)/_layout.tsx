@@ -38,6 +38,12 @@ export default function TabLayout() {
           ),
         }}
       />
+      <Tabs.Screen
+        name="character/[id]"
+        options={{
+          href: null,
+        }}
+      />
     </Tabs>
   );
 }

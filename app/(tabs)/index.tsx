@@ -1,21 +1,32 @@
 import React, { useEffect, useState } from 'react';
-import { Text, StyleSheet, View, TouchableOpacity, FlatList } from 'react-native';
+import { Button, Text, StyleSheet, View, TouchableOpacity, FlatList } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Ionicons } from '@expo/vector-icons';
+import { Link } from 'expo-router';
 
-type CharacterData = {
-  name: string;
-  level: number;
-  strength: number;
-  dexterity: number;
-  will: number;
-  description: string;
-  biography: string;
-};
+import { CharacterType } from '@/types/CharacterType';
 
 export default function Index() {
-  const [characters, setCharacters] = useState<CharacterData[]>([]);
+  const [characters, setCharacters] = useState<CharacterType[]>([]);
+
+  /* for testing purposes, button to delete all characters
+  
+  const clearStorage = async () => {
+    try {
+      await AsyncStorage.clear();
+      console.log('AsyncStorage cleared successfully!');
+    } catch (error) {
+      console.error('Error clearing AsyncStorage:', error);
+    }}
+
+    this is to be put in the view area
+
+      <View>
+        <Button title="Clear All Characters" onPress={clearStorage} />
+      </View>
+      
+  */
 
   useEffect(() => {
     // load saved characters when the component mounts
@@ -37,7 +48,8 @@ export default function Index() {
   const handlePress = async () => {
     console.log('Create New Character button pressed!');
     
-    const newCharacter: CharacterData = {
+    const newCharacter: CharacterType = {
+      id: `${Date.now()}`,
       name: 'New Character',
       level: 1,
       strength: 1,
@@ -45,6 +57,9 @@ export default function Index() {
       will: 1,
       description: "Your character's description.",
       biography: "Your character's biography.",
+      inventorySlots: 11,
+      inventory: [],
+      spells: []
     };
 
     try {
@@ -62,12 +77,16 @@ export default function Index() {
   };
 
   // render a list containing each character to be loaded in the view
-  const renderItem = ({ item }: { item: CharacterData }) => (
+  const renderItem = ({ item }: { item: CharacterType }) => (
     <View style={styles.characterCard}>
-      <View style={styles.iconContainer}>
-        <Ionicons name="person" size={30} color="black" />
-      </View>
-      <Text style={styles.characterName}>{item.name}</Text>
+      <Link href={`./character/${item.id}`}>
+        <View>
+          <View style={styles.iconContainer}>
+            <Ionicons name="person" size={30} color="black" />
+          </View>
+          <Text style={styles.characterName}>{item.name}</Text>
+        </View>
+      </Link>
     </View>
   );
 
@@ -88,6 +107,7 @@ export default function Index() {
         ListEmptyComponent={renderNoCharacters} // display message when no characters exist
         style={styles.characterList}
       />
+
       <TouchableOpacity style={styles.floatingButton} onPress={handlePress}>
         <Text style={styles.plusText}>+</Text>
       </TouchableOpacity>
@@ -120,6 +140,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 20,
     width: '30%', // each card occupies 30% width of the row
+    justifyContent: 'center'
   },
   iconContainer: {
     width: 60,
@@ -128,6 +149,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFDE21',
     justifyContent: 'center',
     alignItems: 'center',
+    alignSelf: 'center'
   },
   characterName: {
     marginTop: 10,
