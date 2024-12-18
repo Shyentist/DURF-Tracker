@@ -46,7 +46,7 @@ export default function CharacterDetail() {
 
     const { name, level, strength, dexterity, will, description, biography, inventory } = updatedCharacter;
 
-    // Simple validation
+    // for validation
     if (!name || !level || !strength || !dexterity || !will || !description || !biography) {
       Alert.alert('Validation Error', 'All fields are required.');
       return;
@@ -216,7 +216,9 @@ export default function CharacterDetail() {
           />
         </View>
 
-        <Button title="Save Changes" onPress={validateAndSave} />
+        <TouchableOpacity style={styles.saveButton} onPress={validateAndSave}>
+          <Text style={styles.saveButtonText}>Save Changes</Text>
+        </TouchableOpacity>
       </ScrollView>
     </View>
   );
@@ -268,5 +270,19 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     paddingHorizontal: 10,
     borderRadius: 5,
+  },
+  saveButton: {
+    backgroundColor: '#FFDE21',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 20,
+  },
+  saveButtonText: {
+    color: 'black',
+    fontSize: 16,
+    fontWeight: 'bold',
   },
 });
