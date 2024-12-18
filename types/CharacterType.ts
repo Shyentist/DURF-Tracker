@@ -8,5 +8,6 @@ export type CharacterType = {
     description: string;
     biography: string;
     inventory: string[];
-    spells: string[]
+    spells: string[];
+    gold: number;
 };

@@ -58,7 +58,8 @@ export default function Index() {
       description: "Your character's description.",
       biography: "Your character's biography.",
       inventory: [],
-      spells: []
+      spells: [],
+      gold: 0
     };
 
     try {
@@ -179,6 +180,6 @@ const styles = StyleSheet.create({
   plusText: {
     fontSize: 32,
     color: 'black',
-    paddingBottom: 8 // sub-optimal vertical centering
+    paddingBottom: 3 // sub-optimal vertical centering
   }
 });
