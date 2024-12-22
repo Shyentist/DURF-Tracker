@@ -44,16 +44,16 @@ export default function CharacterDetail() {
   const validateAndSave = async () => {
     if (!updatedCharacter) return;
 
-    const { name, level, strength, dexterity, will, description, biography, inventory } = updatedCharacter;
+    const { name, hitdice, strength, dexterity, will, description, biography, inventory } = updatedCharacter;
 
     // for validation
-    if (!name || !level || !strength || !dexterity || !will || !description || !biography) {
+    if (!name || !hitdice || !strength || !dexterity || !will || !description || !biography) {
       Alert.alert('Validation Error', 'All fields are required.');
       return;
     }
 
-    if (isNaN(Number(level)) || isNaN(Number(strength)) || isNaN(Number(dexterity)) || isNaN(Number(will))) {
-      Alert.alert('Validation Error', 'Level, Strength, Dexterity, and Will must be numbers.');
+    if (isNaN(Number(hitdice)) || isNaN(Number(strength)) || isNaN(Number(dexterity)) || isNaN(Number(will))) {
+      Alert.alert('Validation Error', 'Hit Dice, Strength, Dexterity, and Will must be numbers.');
       return;
     }
 
@@ -127,61 +127,75 @@ export default function CharacterDetail() {
         <View style={styles.row}>
           <Text style={styles.label}>Name:</Text>
           <TextInput
-            style={styles.input}
+            style={[styles.input, {width:'66%'}]}
             value={updatedCharacter?.name || ''}
             onChangeText={(value) => handleInputChange('name', value)}
             placeholder="Character Name"
           />
         </View>
 
+        
         <View style={styles.row}>
-          <Text style={styles.label}>Level:</Text>
+          <Text style={[styles.label, {width:'12%'}]}>HD:</Text>
           <TextInput
-            style={styles.input}
-            value={updatedCharacter?.level.toString() || ''}
+            style={[styles.input, {width:'20%'}]}
+            value={updatedCharacter?.hitdice.toString() || ''}
             onChangeText={(value) => handleInputChange('level', value)}
             keyboardType="numeric"
-            placeholder="Level"
+            placeholder="Hit Dice"
+          />
+
+          <Text style={[styles.label, {width:'12%'}]}>XP:</Text>
+          <TextInput
+            style={[styles.input, {width:'20%'}]}
+            value={updatedCharacter?.xp.toString() || ''}
+            onChangeText={(value) => handleInputChange('level', value)}
+            keyboardType="numeric"
+            placeholder="Experience Points"
+          />
+
+          <Text style={[styles.label, {width:'12%'}]}>Gold:</Text>
+          <TextInput
+            style={[styles.input, {width:'20%'}]}
+            value={updatedCharacter?.gold.toString() || ''}
+            onChangeText={(value) => handleInputChange('gold', value)}
+            keyboardType="numeric"
+            placeholder="Gold"
           />
         </View>
 
-        <View style={styles.row}>
-          <Text style={styles.label}>STR:</Text>
+        <View style={styles.row}>  
+          <Text style={[styles.label, {width:'12%'}]}>STR:</Text>
           <TextInput
-            style={styles.input}
+            style={[styles.input, {width:'20%'}]}
             value={updatedCharacter?.strength.toString() || ''}
             onChangeText={(value) => handleInputChange('strength', value)}
             keyboardType="numeric"
             placeholder="Strength"
           />
-        </View>
 
-        <View style={styles.row}>
-          <Text style={styles.label}>DEX:</Text>
+          <Text style={[styles.label, {width:'12%'}]}>DEX:</Text>
           <TextInput
-            style={styles.input}
+            style={[styles.input, {width:'20%'}]}
             value={updatedCharacter?.dexterity.toString() || ''}
             onChangeText={(value) => handleInputChange('dexterity', value)}
             keyboardType="numeric"
             placeholder="Dexterity"
           />
-        </View>
 
-        <View style={styles.row}>
-          <Text style={styles.label}>WIL:</Text>
+          <Text style={[styles.label, {width:'12%'}]}>WIL:</Text>
           <TextInput
-            style={styles.input}
+            style={[styles.input, {width:'20%'}]}
             value={updatedCharacter?.will.toString() || ''}
             onChangeText={(value) => handleInputChange('will', value)}
             keyboardType="numeric"
             placeholder="Will"
           />
         </View>
-
         <View style={styles.row}>
           <Text style={styles.label}>Description:</Text>
           <TextInput
-            style={styles.input}
+            style={[styles.input, {width:'66%'}]}
             value={updatedCharacter?.description || ''}
             onChangeText={(value) => handleInputChange('description', value)}
             placeholder="Description"
@@ -191,7 +205,7 @@ export default function CharacterDetail() {
         <View style={styles.row}>
           <Text style={styles.label}>Biography:</Text>
           <TextInput
-            style={styles.input}
+            style={[styles.input, {width:'66%'}]}
             value={updatedCharacter?.biography || ''}
             onChangeText={(value) => handleInputChange('biography', value)}
             placeholder="Biography"
@@ -200,20 +214,9 @@ export default function CharacterDetail() {
 
         <View style={styles.row}>
           <Text style={styles.label}>Inventory:</Text>
-          <Text style={styles.input}>
+          <Text style={[styles.input, {width:'66%'}]}>
             {updatedCharacter?.inventory.join(', ') || 'No items in inventory'}
           </Text>
-        </View>
-
-        <View style={styles.row}>
-          <Text style={styles.label}>Gold:</Text>
-          <TextInput
-            style={styles.input}
-            value={updatedCharacter?.gold.toString() || ''}
-            onChangeText={(value) => handleInputChange('gold', value)}
-            keyboardType="numeric"
-            placeholder="Gold"
-          />
         </View>
 
         <TouchableOpacity style={styles.saveButton} onPress={validateAndSave}>
@@ -226,8 +229,7 @@ export default function CharacterDetail() {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    padding: 20,
+    padding: 10,
   },
   header: {
     fontSize: 24,
@@ -255,21 +257,22 @@ const styles = StyleSheet.create({
     paddingBottom: 20,
   },
   row: {
+    width: '100%',
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 15,
+    marginBottom: 3,
+    marginTop: 3,
+    justifyContent: 'space-between'
   },
   label: {
-    width: 100,
-    fontWeight: 'bold',
+    fontWeight: 'bold'
   },
   input: {
-    flex: 1,
+    paddingLeft: 4,
     height: 40,
     borderColor: '#ccc',
     borderWidth: 1,
-    paddingHorizontal: 10,
-    borderRadius: 5,
+    borderRadius: 5
   },
   saveButton: {
     backgroundColor: '#FFDE21',
@@ -284,5 +287,5 @@ const styles = StyleSheet.create({
     color: 'black',
     fontSize: 16,
     fontWeight: 'bold',
-  },
+  }
 });

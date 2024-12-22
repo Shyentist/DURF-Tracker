@@ -1,7 +1,8 @@
 export type CharacterType = {
     id: string;
     name: string;
-    level: number;
+    hitdice: number;
+    xp: number;
     strength: number;
     dexterity: number;
     will: number;

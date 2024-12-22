@@ -51,7 +51,8 @@ export default function Index() {
     const newCharacter: CharacterType = {
       id: `${Date.now()}`,
       name: 'New Character',
-      level: 1,
+      hitdice: 1,
+      xp: 0,
       strength: 1,
       dexterity: 1,
       will: 1,
