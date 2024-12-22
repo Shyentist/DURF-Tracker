@@ -140,7 +140,7 @@ export default function CharacterDetail() {
           <TextInput
             style={[styles.input, {width:'20%'}]}
             value={updatedCharacter?.hitdice.toString() || ''}
-            onChangeText={(value) => handleInputChange('level', value)}
+            onChangeText={(value) => handleInputChange('hitdice', value)}
             keyboardType="numeric"
             placeholder="Hit Dice"
           />
@@ -149,7 +149,7 @@ export default function CharacterDetail() {
           <TextInput
             style={[styles.input, {width:'20%'}]}
             value={updatedCharacter?.xp.toString() || ''}
-            onChangeText={(value) => handleInputChange('level', value)}
+            onChangeText={(value) => handleInputChange('xp', value)}
             keyboardType="numeric"
             placeholder="Experience Points"
           />
