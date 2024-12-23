@@ -126,7 +126,7 @@ export default function CharacterDetail() {
         <Text style={styles.header}>{character.name}</Text>
 
         <View style={styles.row}>
-          <Text style={styles.label}>Name:</Text>
+          <Text style={styles.label}>Name</Text>
           <TextInput
             style={[styles.input, {width:'66%'}]}
             value={updatedCharacter?.name || ''}
@@ -135,64 +135,75 @@ export default function CharacterDetail() {
           />
         </View>
 
-        
         <View style={styles.row}>
-          <Text style={[styles.label, {width:'12%'}]}>HD:</Text>
-          <TextInput
-            style={[styles.input, {width:'20%'}]}
-            value={updatedCharacter?.hitdice.toString() || ''}
-            onChangeText={(value) => handleInputChange('hitdice', value)}
-            keyboardType="numeric"
-            placeholder="Hit Dice"
-          />
-
-          <Text style={[styles.label, {width:'12%'}]}>XP:</Text>
-          <TextInput
-            style={[styles.input, {width:'20%'}]}
-            value={updatedCharacter?.xp.toString() || ''}
-            onChangeText={(value) => handleInputChange('xp', value)}
-            keyboardType="numeric"
-            placeholder="Experience Points"
-          />
-
-          <Text style={[styles.label, {width:'12%'}]}>Gold:</Text>
-          <TextInput
-            style={[styles.input, {width:'20%'}]}
-            value={updatedCharacter?.gold.toString() || ''}
-            onChangeText={(value) => handleInputChange('gold', value)}
-            keyboardType="numeric"
-            placeholder="Gold"
-          />
+          <View style={styles.column}> 
+            <Text style={styles.sectionHeader}>Attributes</Text>
+            <View style={styles.row}> 
+              <Text style={[styles.label, {width:'20%'}]}>STR</Text>
+              <TextInput
+                style={[styles.input, {width:'70%'}]}
+                value={updatedCharacter?.strength.toString() || ''}
+                onChangeText={(value) => handleInputChange('strength', value)}
+                keyboardType="numeric"
+                placeholder="Strength"
+              />
+            </View>
+            <View style={styles.row}>
+              <Text style={[styles.label, {width:'20%'}]}>DEX</Text>
+              <TextInput
+                style={[styles.input, {width:'70%'}]}
+                value={updatedCharacter?.dexterity.toString() || ''}
+                onChangeText={(value) => handleInputChange('dexterity', value)}
+                keyboardType="numeric"
+                placeholder="Dexterity"
+              />
+            </View>
+            <View style={styles.row}>
+              <Text style={[styles.label, {width:'20%'}]}>WIL</Text>
+              <TextInput
+                style={[styles.input, {width:'70%'}]}
+                value={updatedCharacter?.will.toString() || ''}
+                onChangeText={(value) => handleInputChange('will', value)}
+                keyboardType="numeric"
+                placeholder="Will"
+              />
+            </View>
+          </View>
+          <View style={styles.column}>
+            <Text style={styles.sectionHeader}>Progress</Text>
+            <View style={styles.row}>
+              <Text style={[styles.label, {width:'20%'}]}>HD</Text>
+              <TextInput
+                style={[styles.input, {width:'70%'}]}
+                value={updatedCharacter?.hitdice.toString() || ''}
+                onChangeText={(value) => handleInputChange('hitdice', value)}
+                keyboardType="numeric"
+                placeholder="Hit Dice"
+              />
+            </View>
+            <View style={styles.row}>
+              <Text style={[styles.label, {width:'20%'}]}>XP</Text>
+              <TextInput
+                style={[styles.input, {width:'70%'}]}
+                value={updatedCharacter?.xp.toString() || ''}
+                onChangeText={(value) => handleInputChange('xp', value)}
+                keyboardType="numeric"
+                placeholder="Experience Points"
+              />
+            </View>
+            <View style={styles.row}>
+              <Text style={[styles.label, {width:'20%'}]}>GP</Text>
+              <TextInput
+                style={[styles.input, {width:'70%'}]}
+                value={updatedCharacter?.gold.toString() || ''}
+                onChangeText={(value) => handleInputChange('gold', value)}
+                keyboardType="numeric"
+                placeholder="Gold Pieces"
+              />
+            </View>
+          </View>
         </View>
-
-        <View style={styles.row}>  
-          <Text style={[styles.label, {width:'12%'}]}>STR:</Text>
-          <TextInput
-            style={[styles.input, {width:'20%'}]}
-            value={updatedCharacter?.strength.toString() || ''}
-            onChangeText={(value) => handleInputChange('strength', value)}
-            keyboardType="numeric"
-            placeholder="Strength"
-          />
-
-          <Text style={[styles.label, {width:'12%'}]}>DEX:</Text>
-          <TextInput
-            style={[styles.input, {width:'20%'}]}
-            value={updatedCharacter?.dexterity.toString() || ''}
-            onChangeText={(value) => handleInputChange('dexterity', value)}
-            keyboardType="numeric"
-            placeholder="Dexterity"
-          />
-
-          <Text style={[styles.label, {width:'12%'}]}>WIL:</Text>
-          <TextInput
-            style={[styles.input, {width:'20%'}]}
-            value={updatedCharacter?.will.toString() || ''}
-            onChangeText={(value) => handleInputChange('will', value)}
-            keyboardType="numeric"
-            placeholder="Will"
-          />
-        </View>
+        
         <View style={styles.row}>
           <Text style={styles.label}>Description:</Text>
           <TextInput
@@ -265,6 +276,19 @@ const styles = StyleSheet.create({
     marginTop: 3,
     justifyContent: 'space-between'
   },
+  column: {
+    padding:4,
+    borderStyle: 'dashed',
+    borderWidth: 2,
+    borderRadius: 10,
+    borderColor: 'darkgrey',
+    width: '49%',
+    flexDirection: 'column',
+    alignItems: 'center',
+    marginBottom: 3,
+    marginTop: 3,
+    justifyContent: 'space-between'
+  },
   label: {
     fontWeight: 'bold'
   },
@@ -288,5 +312,9 @@ const styles = StyleSheet.create({
     color: 'black',
     fontSize: 16,
     fontWeight: 'bold',
+  },
+  sectionHeader: {
+    fontSize: 16,
+    fontWeight: 'bold'
   }
 });
