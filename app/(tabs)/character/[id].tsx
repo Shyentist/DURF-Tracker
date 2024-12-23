@@ -207,7 +207,8 @@ export default function CharacterDetail() {
         <View style={styles.row}>
           <Text style={styles.label}>Description</Text>
           <TextInput
-            style={styles.input}
+            style={[styles.input, {height: 80}]}
+            multiline={true}
             value={updatedCharacter?.description || ''}
             onChangeText={(value) => handleInputChange('description', value)}
             placeholder="Description"
@@ -217,7 +218,8 @@ export default function CharacterDetail() {
         <View style={styles.row}>
           <Text style={styles.label}>Biography</Text>
           <TextInput
-            style={styles.input}
+            style={[styles.input, {height: 80}]}
+            multiline={true}
             value={updatedCharacter?.biography || ''}
             onChangeText={(value) => handleInputChange('biography', value)}
             placeholder="Biography"
@@ -291,10 +293,10 @@ const styles = StyleSheet.create({
   },
   label: {
     fontWeight: 'bold',
-    width: '20%'
+    width: '25%'
   },
   input: {
-    width: '75%',
+    width: '65%',
     paddingLeft: 4,
     height: 40,
     borderColor: '#ccc',
