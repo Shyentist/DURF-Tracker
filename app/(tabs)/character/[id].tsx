@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Text, StyleSheet, View, ScrollView, ActivityIndicator, Alert, TouchableOpacity, TextInput, Button, FlatList } from 'react-native';
+import { Text, StyleSheet, View, ScrollView, ActivityIndicator, Alert, TouchableOpacity, TextInput, Keyboard } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Ionicons } from '@expo/vector-icons';
@@ -65,6 +65,7 @@ export default function CharacterDetail() {
           char.id === id ? updatedCharacter : char
         );
         await AsyncStorage.setItem('characters', JSON.stringify(updatedCharacters));
+        
         router.replace('/(tabs)');
       }
     } catch (error) {
@@ -121,7 +122,7 @@ export default function CharacterDetail() {
         <Ionicons name="trash" size={24} color="black" />
       </TouchableOpacity>
 
-      <ScrollView contentContainerStyle={styles.scrollContainer}>
+      <ScrollView contentContainerStyle={styles.scrollContainer} keyboardShouldPersistTaps={'handled'}>
         <Text style={styles.header}>{character.name}</Text>
 
         <View style={styles.row}>
