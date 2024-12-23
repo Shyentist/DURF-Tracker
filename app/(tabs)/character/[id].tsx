@@ -128,7 +128,7 @@ export default function CharacterDetail() {
         <View style={styles.row}>
           <Text style={styles.label}>Name</Text>
           <TextInput
-            style={[styles.input, {width:'66%'}]}
+            style={styles.input}
             value={updatedCharacter?.name || ''}
             onChangeText={(value) => handleInputChange('name', value)}
             placeholder="Character Name"
@@ -139,9 +139,9 @@ export default function CharacterDetail() {
           <View style={styles.column}> 
             <Text style={styles.sectionHeader}>Attributes</Text>
             <View style={styles.row}> 
-              <Text style={[styles.label, {width:'20%'}]}>STR</Text>
+              <Text style={styles.label}>STR</Text>
               <TextInput
-                style={[styles.input, {width:'70%'}]}
+                style={styles.input}
                 value={updatedCharacter?.strength.toString() || ''}
                 onChangeText={(value) => handleInputChange('strength', value)}
                 keyboardType="numeric"
@@ -149,9 +149,9 @@ export default function CharacterDetail() {
               />
             </View>
             <View style={styles.row}>
-              <Text style={[styles.label, {width:'20%'}]}>DEX</Text>
+              <Text style={styles.label}>DEX</Text>
               <TextInput
-                style={[styles.input, {width:'70%'}]}
+                style={styles.input}
                 value={updatedCharacter?.dexterity.toString() || ''}
                 onChangeText={(value) => handleInputChange('dexterity', value)}
                 keyboardType="numeric"
@@ -159,9 +159,9 @@ export default function CharacterDetail() {
               />
             </View>
             <View style={styles.row}>
-              <Text style={[styles.label, {width:'20%'}]}>WIL</Text>
+              <Text style={styles.label}>WIL</Text>
               <TextInput
-                style={[styles.input, {width:'70%'}]}
+                style={styles.input}
                 value={updatedCharacter?.will.toString() || ''}
                 onChangeText={(value) => handleInputChange('will', value)}
                 keyboardType="numeric"
@@ -172,9 +172,9 @@ export default function CharacterDetail() {
           <View style={styles.column}>
             <Text style={styles.sectionHeader}>Progress</Text>
             <View style={styles.row}>
-              <Text style={[styles.label, {width:'20%'}]}>HD</Text>
+              <Text style={styles.label}>HD</Text>
               <TextInput
-                style={[styles.input, {width:'70%'}]}
+                style={styles.input}
                 value={updatedCharacter?.hitdice.toString() || ''}
                 onChangeText={(value) => handleInputChange('hitdice', value)}
                 keyboardType="numeric"
@@ -182,9 +182,9 @@ export default function CharacterDetail() {
               />
             </View>
             <View style={styles.row}>
-              <Text style={[styles.label, {width:'20%'}]}>XP</Text>
+              <Text style={styles.label}>XP</Text>
               <TextInput
-                style={[styles.input, {width:'70%'}]}
+                style={styles.input}
                 value={updatedCharacter?.xp.toString() || ''}
                 onChangeText={(value) => handleInputChange('xp', value)}
                 keyboardType="numeric"
@@ -192,9 +192,9 @@ export default function CharacterDetail() {
               />
             </View>
             <View style={styles.row}>
-              <Text style={[styles.label, {width:'20%'}]}>GP</Text>
+              <Text style={styles.label}>GP</Text>
               <TextInput
-                style={[styles.input, {width:'70%'}]}
+                style={styles.input}
                 value={updatedCharacter?.gold.toString() || ''}
                 onChangeText={(value) => handleInputChange('gold', value)}
                 keyboardType="numeric"
@@ -203,11 +203,11 @@ export default function CharacterDetail() {
             </View>
           </View>
         </View>
-        
+
         <View style={styles.row}>
-          <Text style={styles.label}>Description:</Text>
+          <Text style={styles.label}>Description</Text>
           <TextInput
-            style={[styles.input, {width:'66%'}]}
+            style={styles.input}
             value={updatedCharacter?.description || ''}
             onChangeText={(value) => handleInputChange('description', value)}
             placeholder="Description"
@@ -215,9 +215,9 @@ export default function CharacterDetail() {
         </View>
 
         <View style={styles.row}>
-          <Text style={styles.label}>Biography:</Text>
+          <Text style={styles.label}>Biography</Text>
           <TextInput
-            style={[styles.input, {width:'66%'}]}
+            style={styles.input}
             value={updatedCharacter?.biography || ''}
             onChangeText={(value) => handleInputChange('biography', value)}
             placeholder="Biography"
@@ -225,8 +225,8 @@ export default function CharacterDetail() {
         </View>
 
         <View style={styles.row}>
-          <Text style={styles.label}>Inventory:</Text>
-          <Text style={[styles.input, {width:'66%'}]}>
+          <Text style={styles.label}>Inventory</Text>
+          <Text style={styles.input}>
             {updatedCharacter?.inventory.join(', ') || 'No items in inventory'}
           </Text>
         </View>
@@ -287,12 +287,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 3,
     marginTop: 3,
-    justifyContent: 'space-between'
+    justifyContent: 'space-around'
   },
   label: {
-    fontWeight: 'bold'
+    fontWeight: 'bold',
+    width: '20%'
   },
   input: {
+    width: '75%',
     paddingLeft: 4,
     height: 40,
     borderColor: '#ccc',
