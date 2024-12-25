@@ -85,7 +85,7 @@ export default function CharacterDetail() {
         await AsyncStorage.setItem('characters', JSON.stringify(updatedCharacters));
 
         setCharacter(updatedCharacter);
-        
+
         router.replace('/(tabs)');
       }
     } catch (error) {
@@ -143,23 +143,18 @@ export default function CharacterDetail() {
       </TouchableOpacity>
 
       <ScrollView contentContainerStyle={styles.scrollContainer} keyboardShouldPersistTaps={'handled'}>
-        <Text style={styles.header}>{character.name}</Text>
+      
         <View  style={styles.column}>
-          <Text style={styles.sectionHeader}>Identity</Text>
-          <View style={styles.row}>
-            <Text style={styles.label}>Name</Text>
-            <TextInput
-              style={styles.input}
-              value={updatedCharacter?.name || ''}
-              onChangeText={(value) => handleInputChange('name', value)}
-              placeholder="Character Name"
-            />
-          </View>
-
+          <TextInput
+                style={styles.header}
+                value={updatedCharacter?.name || ''}
+                onChangeText={(value) => handleInputChange('name', value)}
+                placeholder="Character Name"
+          />
           <View style={styles.row}>
             <Text style={styles.label}>Description</Text>
             <TextInput
-              style={[styles.input, {height: 80}]}
+              style={[styles.input, {height: 50}]}
               multiline={true}
               value={updatedCharacter?.description || ''}
               onChangeText={(value) => handleInputChange('description', value)}
@@ -170,7 +165,7 @@ export default function CharacterDetail() {
           <View style={styles.row}>
             <Text style={styles.label}>Biography</Text>
             <TextInput
-              style={[styles.input, {height: 80}]}
+              style={[styles.input, {height: 50}]}
               multiline={true}
               value={updatedCharacter?.biography || ''}
               onChangeText={(value) => handleInputChange('biography', value)}
@@ -179,8 +174,8 @@ export default function CharacterDetail() {
           </View>
         </View>
 
-        <View style={styles.row}>
-          <View style={[styles.column, {width:'49%'}]}> 
+        <View style={[styles.row, {justifyContent: 'space-between'}]}>
+          <View style={[styles.column, {width:'49.5%'}]}> 
             <Text style={styles.sectionHeader}>Attributes</Text>
             <View style={styles.row}> 
               <Text style={styles.label}>STR</Text>
@@ -213,7 +208,7 @@ export default function CharacterDetail() {
               />
             </View>
           </View>
-          <View style={[styles.column, {width:'49%'}]}>
+          <View style={[styles.column, {width:'49.5%'}]}>
             <Text style={styles.sectionHeader}>Progress</Text>
             <View style={styles.row}>
               <Text style={styles.label}>HD</Text>
@@ -282,7 +277,7 @@ export default function CharacterDetail() {
                 placeholder="Slots"
               />
           <TextInput
-                style={[styles.input, { width: '15%' }]}
+                style={[styles.input, { width: '12%' }]}
                 keyboardType="numeric"
                 placeholder="Price"
               />
@@ -299,12 +294,14 @@ export default function CharacterDetail() {
 
 const styles = StyleSheet.create({
   container: {
-    padding: 10,
+    padding: 6,
   },
   header: {
     fontSize: 20,
     fontWeight: 'bold',
-    marginBottom: 10,
+    marginBottom: 4,
+    borderColor: '#ddd',
+    borderBottomWidth: 1,
   },
   deleteButton: {
     position: 'absolute',
@@ -329,7 +326,7 @@ const styles = StyleSheet.create({
   row: {
     width: '100%',
     flexDirection: 'row',
-    alignItems: 'center',
+    alignItems: 'flex-end',
     marginBottom: 3,
     marginTop: 3,
     justifyContent: 'space-evenly'
@@ -339,26 +336,27 @@ const styles = StyleSheet.create({
     borderStyle: 'dashed',
     borderWidth: 2,
     borderRadius: 10,
-    borderColor: 'darkgrey',
+    borderColor: '#ddd',
     flexDirection: 'column',
     alignItems: 'center',
-    marginBottom: 3,
-    marginTop: 3,
-    justifyContent: 'space-around'
+    justifyContent: 'space-around',
+    marginBottom: 1
   },
   label: {
     fontWeight: 'bold',
     width: '25%',
-    fontSize: 12
+    fontSize: 12,
+    paddingBottom: 0
   },
   input: {
     width: '65%',
     paddingLeft: 4,
-    height: 40,
-    borderColor: '#ccc',
-    borderWidth: 1,
-    borderRadius: 5,
-    fontSize: 12
+    height: 20,
+    borderColor: '#ddd',
+    borderBottomWidth: 1,
+    fontSize: 12,
+    paddingBottom: 0,
+    paddingTop: 0
   },
   saveButton: {
     backgroundColor: '#FFDE21',
@@ -381,6 +379,9 @@ const styles = StyleSheet.create({
   deleteItemButton: {
     marginLeft: 10,
     padding: 5,
+  },
+  editIcon: {
+    marginLeft: 8,
   }
   
 });
