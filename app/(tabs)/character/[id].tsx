@@ -81,7 +81,10 @@ export default function CharacterDetail() {
         const updatedCharacters = characters.map((char) =>
           char.id === id ? updatedCharacter : char
         );
+
         await AsyncStorage.setItem('characters', JSON.stringify(updatedCharacters));
+
+        setCharacter(updatedCharacter);
         
         router.replace('/(tabs)');
       }
