@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Button, Text, StyleSheet, View, TouchableOpacity, FlatList } from 'react-native';
+import { Text, StyleSheet, View, TouchableOpacity, FlatList } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Ionicons } from '@expo/vector-icons';
@@ -56,8 +56,8 @@ export default function Index() {
       strength: 1,
       dexterity: 1,
       will: 1,
-      description: "Your character's description.",
-      biography: "Your character's biography.",
+      description: "",
+      biography: "",
       inventory: [],
       spells: [],
       gold: 0

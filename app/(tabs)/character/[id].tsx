@@ -1,5 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { Text, StyleSheet, View, ScrollView, ActivityIndicator, Alert, TouchableOpacity, TextInput, Keyboard } from 'react-native';
+import { 
+  Text, 
+  StyleSheet, 
+  View, ScrollView, 
+  ActivityIndicator, 
+  Alert, 
+  TouchableOpacity, 
+  TextInput
+} from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Ionicons } from '@expo/vector-icons';
@@ -36,7 +44,9 @@ export default function CharacterDetail() {
     if (updatedCharacter) {
       setUpdatedCharacter({
         ...updatedCharacter,
-        [field]: value,
+        [field]: field === 'strength' || field === 'dexterity' || field === 'will' || field === 'hitdice' || field === 'gold' || field === 'xp'
+          ? Number(value)
+          : value,
       });
     }
   };
@@ -44,10 +54,17 @@ export default function CharacterDetail() {
   const validateAndSave = async () => {
     if (!updatedCharacter) return;
 
-    const { name, hitdice, strength, dexterity, will, description, biography, inventory } = updatedCharacter;
+    const { name, hitdice, strength, dexterity, will, description, biography, xp, gold } = updatedCharacter;
 
-    // for validation
-    if (!name || !hitdice || !strength || !dexterity || !will || !description || !biography) {
+    if (
+      !name || 
+      hitdice == null || 
+      strength == null || 
+      dexterity == null || 
+      will == null || 
+      xp == null || 
+      gold == null
+    ) {
       Alert.alert('Validation Error', 'All fields are required.');
       return;
     }
@@ -108,7 +125,7 @@ export default function CharacterDetail() {
     );
   }
 
-  if (!character) {
+  if (!character || !updatedCharacter) {
     return (
       <View style={styles.container}>
         <Text style={styles.header}>Character not found</Text>
@@ -124,25 +141,49 @@ export default function CharacterDetail() {
 
       <ScrollView contentContainerStyle={styles.scrollContainer} keyboardShouldPersistTaps={'handled'}>
         <Text style={styles.header}>{character.name}</Text>
+        <View  style={styles.column}>
+          <Text style={styles.sectionHeader}>Identity</Text>
+          <View style={styles.row}>
+            <Text style={styles.label}>Name</Text>
+            <TextInput
+              style={styles.input}
+              value={updatedCharacter?.name || ''}
+              onChangeText={(value) => handleInputChange('name', value)}
+              placeholder="Character Name"
+            />
+          </View>
 
-        <View style={styles.row}>
-          <Text style={styles.label}>Name</Text>
-          <TextInput
-            style={styles.input}
-            value={updatedCharacter?.name || ''}
-            onChangeText={(value) => handleInputChange('name', value)}
-            placeholder="Character Name"
-          />
+          <View style={styles.row}>
+            <Text style={styles.label}>Description</Text>
+            <TextInput
+              style={[styles.input, {height: 80}]}
+              multiline={true}
+              value={updatedCharacter?.description || ''}
+              onChangeText={(value) => handleInputChange('description', value)}
+              placeholder="Your character's description"
+            />
+          </View>
+
+          <View style={styles.row}>
+            <Text style={styles.label}>Biography</Text>
+            <TextInput
+              style={[styles.input, {height: 80}]}
+              multiline={true}
+              value={updatedCharacter?.biography || ''}
+              onChangeText={(value) => handleInputChange('biography', value)}
+              placeholder="Your character's biography"
+            />
+          </View>
         </View>
 
         <View style={styles.row}>
-          <View style={styles.column}> 
+          <View style={[styles.column, {width:'49%'}]}> 
             <Text style={styles.sectionHeader}>Attributes</Text>
             <View style={styles.row}> 
               <Text style={styles.label}>STR</Text>
               <TextInput
                 style={styles.input}
-                value={updatedCharacter?.strength.toString() || ''}
+                value={updatedCharacter?.strength.toString()}
                 onChangeText={(value) => handleInputChange('strength', value)}
                 keyboardType="numeric"
                 placeholder="Strength"
@@ -152,7 +193,7 @@ export default function CharacterDetail() {
               <Text style={styles.label}>DEX</Text>
               <TextInput
                 style={styles.input}
-                value={updatedCharacter?.dexterity.toString() || ''}
+                value={updatedCharacter?.dexterity.toString()}
                 onChangeText={(value) => handleInputChange('dexterity', value)}
                 keyboardType="numeric"
                 placeholder="Dexterity"
@@ -162,20 +203,20 @@ export default function CharacterDetail() {
               <Text style={styles.label}>WIL</Text>
               <TextInput
                 style={styles.input}
-                value={updatedCharacter?.will.toString() || ''}
+                value={updatedCharacter?.will.toString()}
                 onChangeText={(value) => handleInputChange('will', value)}
                 keyboardType="numeric"
                 placeholder="Will"
               />
             </View>
           </View>
-          <View style={styles.column}>
+          <View style={[styles.column, {width:'49%'}]}>
             <Text style={styles.sectionHeader}>Progress</Text>
             <View style={styles.row}>
               <Text style={styles.label}>HD</Text>
               <TextInput
                 style={styles.input}
-                value={updatedCharacter?.hitdice.toString() || ''}
+                value={updatedCharacter?.hitdice.toString()}
                 onChangeText={(value) => handleInputChange('hitdice', value)}
                 keyboardType="numeric"
                 placeholder="Hit Dice"
@@ -185,7 +226,7 @@ export default function CharacterDetail() {
               <Text style={styles.label}>XP</Text>
               <TextInput
                 style={styles.input}
-                value={updatedCharacter?.xp.toString() || ''}
+                value={updatedCharacter?.xp.toString()}
                 onChangeText={(value) => handleInputChange('xp', value)}
                 keyboardType="numeric"
                 placeholder="Experience Points"
@@ -195,7 +236,7 @@ export default function CharacterDetail() {
               <Text style={styles.label}>GP</Text>
               <TextInput
                 style={styles.input}
-                value={updatedCharacter?.gold.toString() || ''}
+                value={updatedCharacter?.gold.toString()}
                 onChangeText={(value) => handleInputChange('gold', value)}
                 keyboardType="numeric"
                 placeholder="Gold Pieces"
@@ -204,35 +245,47 @@ export default function CharacterDetail() {
           </View>
         </View>
 
+        <View style={[styles.column, {width:'100%'}]}>
+          <Text style={styles.sectionHeader}>Inventory ({updatedCharacter?.inventory.length}/{10 + updatedCharacter?.strength})</Text>
+          <View style={styles.row}>
+            <Text style={[styles.label, {textAlign: 'center', width: '36%'}]}>Name</Text>
+            <Text style={[styles.label, {textAlign: 'center', width: '36%'}]}>Notes</Text>
+            <Text style={[styles.label, {textAlign: 'center', width: '12%'}]}>Slots</Text>
+            <Text style={[styles.label, {textAlign: 'center', width: '15%'}]}>Price</Text>
+          </View>
+          {updatedCharacter?.inventory.length ? (
+            updatedCharacter.inventory.map((item, index) => (
+              <View key={item.id} style={styles.row}>
+                  <TextInput style={[styles.input, { width: '36%' }]}>Name: {item.name}</TextInput>
+                  <TextInput style={[styles.input, { width: '36%' }]}>Notes: {item.notes}</TextInput>
+                  <TextInput style={[styles.input, { width: '12%' }]}>Slots: {item.slots}</TextInput>
+                  <TextInput style={[styles.input, { width: '15%' }]}>Price: {item.price} GP</TextInput>
+              </View>
+            ))
+          ) : (
+            
         <View style={styles.row}>
-          <Text style={styles.label}>Description</Text>
           <TextInput
-            style={[styles.input, {height: 80}]}
-            multiline={true}
-            value={updatedCharacter?.description || ''}
-            onChangeText={(value) => handleInputChange('description', value)}
-            placeholder="Description"
-          />
-        </View>
-
-        <View style={styles.row}>
-          <Text style={styles.label}>Biography</Text>
+                style={[styles.input, { width: '36%' }]}
+                placeholder="Name"
+              />
           <TextInput
-            style={[styles.input, {height: 80}]}
-            multiline={true}
-            value={updatedCharacter?.biography || ''}
-            onChangeText={(value) => handleInputChange('biography', value)}
-            placeholder="Biography"
-          />
+                style={[styles.input, { width: '36%' }]}
+                placeholder="Notes"
+              />
+          <TextInput
+                style={[styles.input, { width: '12%' }]}
+                keyboardType="numeric"
+                placeholder="Slots"
+              />
+          <TextInput
+                style={[styles.input, { width: '15%' }]}
+                keyboardType="numeric"
+                placeholder="Price"
+              />
         </View>
-
-        <View style={styles.row}>
-          <Text style={styles.label}>Inventory</Text>
-          <Text style={styles.input}>
-            {updatedCharacter?.inventory.join(', ') || 'No items in inventory'}
-          </Text>
+          )}
         </View>
-
         <TouchableOpacity style={styles.saveButton} onPress={validateAndSave}>
           <Text style={styles.saveButtonText}>Save Changes</Text>
         </TouchableOpacity>
@@ -246,7 +299,7 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   header: {
-    fontSize: 24,
+    fontSize: 20,
     fontWeight: 'bold',
     marginBottom: 10,
   },
@@ -276,7 +329,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 3,
     marginTop: 3,
-    justifyContent: 'space-between'
+    justifyContent: 'space-evenly'
   },
   column: {
     padding:4,
@@ -284,7 +337,6 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     borderRadius: 10,
     borderColor: 'darkgrey',
-    width: '49%',
     flexDirection: 'column',
     alignItems: 'center',
     marginBottom: 3,
@@ -293,7 +345,8 @@ const styles = StyleSheet.create({
   },
   label: {
     fontWeight: 'bold',
-    width: '25%'
+    width: '25%',
+    fontSize: 12
   },
   input: {
     width: '65%',
@@ -301,7 +354,8 @@ const styles = StyleSheet.create({
     height: 40,
     borderColor: '#ccc',
     borderWidth: 1,
-    borderRadius: 5
+    borderRadius: 5,
+    fontSize: 12
   },
   saveButton: {
     backgroundColor: '#FFDE21',
@@ -318,7 +372,12 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   sectionHeader: {
-    fontSize: 16,
+    fontSize: 14,
     fontWeight: 'bold'
+  },
+  deleteItemButton: {
+    marginLeft: 10,
+    padding: 5,
   }
+  
 });
