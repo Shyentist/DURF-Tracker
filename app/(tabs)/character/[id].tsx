@@ -13,6 +13,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Ionicons } from '@expo/vector-icons';
 import { CharacterType } from '@/types/CharacterType';
 import { ItemType } from '@/types/ItemType';
+import { SpellType } from '@/types/SpellType';
 
 export default function CharacterDetail() {
   const { id } = useLocalSearchParams();
@@ -20,7 +21,11 @@ export default function CharacterDetail() {
   const [loading, setLoading] = useState(true);
   const [updatedCharacter, setUpdatedCharacter] = useState<CharacterType | null>(null);
   const [updatedInventory, setUpdatedInventory] = useState<ItemType[] | null>(null);
+  const [updatedSpellbook, setUpdatedSpellbook] = useState<SpellType[] | null>(null);
   const router = useRouter();
+  
+  const emptySpell: SpellType = { id: `${Date.now()}`, name: "", notes: ""};
+  const emptyItem: ItemType = { id: `${Date.now()}`, name: "", notes: "", slots: 0, price: 0 };
 
   useEffect(() => {
     const fetchCharacter = async () => {
@@ -31,7 +36,18 @@ export default function CharacterDetail() {
           const foundCharacter = characters.find((char) => char.id === id);
           setCharacter(foundCharacter || null);
           setUpdatedCharacter(foundCharacter || null);
-          setUpdatedInventory(foundCharacter?.inventory || null);
+
+          if (Array.isArray(foundCharacter?.inventory) && foundCharacter?.inventory.length === 0) {
+            setUpdatedInventory([emptyItem]);
+          } else {
+            setUpdatedInventory(foundCharacter?.inventory || null);
+          }
+          
+          if (Array.isArray(foundCharacter?.spells) && foundCharacter?.spells.length === 0) {
+            setUpdatedSpellbook([emptySpell]);
+          } else {
+            setUpdatedSpellbook(foundCharacter?.spells || null);
+          }
         }
       } catch (error) {
         console.error('Error fetching character:', error);
@@ -57,9 +73,7 @@ export default function CharacterDetail() {
   const handleInventoryChange = (field: string, value: string, id: string) => {
     if (!updatedCharacter) return;
   
-    const emptyItem: ItemType = { id: `${Date.now()}`, name: "", notes: "", slots: 0, price: 0 };
-  
-    if (!updatedInventory) {
+    if (!updatedInventory || updatedInventory.length === 0) {
       setUpdatedInventory([emptyItem]);
       return;
     }
@@ -81,14 +95,38 @@ export default function CharacterDetail() {
 
     // add empty row if necessary
     if (totalSlotsUsed <= maxCargo) {
-      updatedItems = [...updatedItems, emptyItem]
+      updatedItems = [...updatedItems, emptyItem];
     } else {
-      return
+      return;
     }
 
-    updatedCharacter.inventory = updatedItems
+    updatedCharacter.inventory = updatedItems;
 
     setUpdatedInventory(updatedItems);
+    setCharacter(updatedCharacter);
+  };
+
+  const handleSpellbookChange = (field: string, value: string, id: string) => {
+    if (!updatedCharacter) return;
+  
+    if (!updatedSpellbook || updatedSpellbook.length === 0) {
+      setUpdatedSpellbook([emptySpell]);
+      return;
+    }
+
+    let updatedSpells = updatedSpellbook.map((spell) =>
+      spell.id === id
+        ? { ...spell, [field]: field === 'slots' || field === 'price' ? Number(value) : value }
+        : spell
+    );
+
+    updatedSpells = updatedSpells.filter((item) => item.name);
+
+    updatedSpells = [...updatedSpells, emptySpell];
+    
+    updatedCharacter.spells = updatedSpells;
+
+    setUpdatedSpellbook(updatedSpells);
     setCharacter(updatedCharacter);
   };
   
@@ -169,7 +207,7 @@ export default function CharacterDetail() {
     );
   }
 
-  if (!character || !updatedCharacter || !updatedInventory) {
+  if (!character || !updatedCharacter || !updatedInventory || !updatedSpellbook) {
     return (
       <View style={styles.container}>
         <Text style={styles.header}>Character not found</Text>
@@ -184,34 +222,35 @@ export default function CharacterDetail() {
       </TouchableOpacity>
 
       <ScrollView contentContainerStyle={styles.scrollContainer} keyboardShouldPersistTaps={'handled'}>
-      
-        <View  style={styles.column}>
-          <TextInput
-                style={styles.header}
-                value={updatedCharacter?.name || ''}
-                onChangeText={(value) => handleInputChange('name', value)}
-                placeholder="Character Name"
-          />
-          <View style={styles.row}>
-            <Text style={styles.label}>Description</Text>
+      <View style={styles.row}>
+          <View style={styles.column}>
             <TextInput
-              style={[styles.input, {height: 50}]}
-              multiline={true}
-              value={updatedCharacter?.description || ''}
-              onChangeText={(value) => handleInputChange('description', value)}
-              placeholder="Your character's description"
+                  style={styles.header}
+                  value={updatedCharacter?.name || ''}
+                  onChangeText={(value) => handleInputChange('name', value)}
+                  placeholder="Character Name"
             />
-          </View>
+            <View style={styles.row}>
+              <Text style={styles.label}>Description</Text>
+              <TextInput
+                style={[styles.input, {height: 50}]}
+                multiline={true}
+                value={updatedCharacter?.description || ''}
+                onChangeText={(value) => handleInputChange('description', value)}
+                placeholder="Your character's description"
+              />
+            </View>
 
-          <View style={styles.row}>
-            <Text style={styles.label}>Biography</Text>
-            <TextInput
-              style={[styles.input, {height: 50}]}
-              multiline={true}
-              value={updatedCharacter?.biography || ''}
-              onChangeText={(value) => handleInputChange('biography', value)}
-              placeholder="Your character's biography"
-            />
+            <View style={styles.row}>
+              <Text style={styles.label}>Biography</Text>
+              <TextInput
+                style={[styles.input, {height: 50}]}
+                multiline={true}
+                value={updatedCharacter?.biography || ''}
+                onChangeText={(value) => handleInputChange('biography', value)}
+                placeholder="Your character's biography"
+              />
+            </View>
           </View>
         </View>
 
@@ -284,52 +323,84 @@ export default function CharacterDetail() {
           </View>
         </View>
 
-        <View style={[styles.column, { width: '100%' }]}>
-          <Text style={styles.sectionHeader}>
-            Inventory ({
-            updatedInventory.reduce((sum, item) => sum + (item.slots || 0), 0)}/{10 + updatedCharacter?.strength
-            })
-          </Text>
-          <View style={styles.row}>
-            <Text style={[styles.label, { textAlign: 'center', width: '36%' }]}>Name</Text>
-            <Text style={[styles.label, { textAlign: 'center', width: '36%' }]}>Notes</Text>
-            <Text style={[styles.label, { textAlign: 'center', width: '12%' }]}>Slots</Text>
-            <Text style={[styles.label, { textAlign: 'center', width: '12%' }]}>Price</Text>
-          </View>
-          {updatedInventory.map((item, index) => (
-            <View key={item.id} style={styles.row}>
-              <TextInput
-                style={[styles.input, { width: '36%' }]}
-                value={item.name}
-                onChangeText={(value) => handleInventoryChange('name', value, item.id)}
-                placeholder="Name"
-              />
-              <TextInput
-                style={[styles.input, { width: '36%' }]}
-                value={item.notes}
-                onChangeText={(value) => handleInventoryChange('notes', value, item.id)}
-                placeholder="Notes"
-              />
-              <TextInput
-                style={[styles.input, { width: '12%' }]}
-                value={item.slots.toString()}
-                onChangeText={(value) => handleInventoryChange('slots', value, item.id)}
-                keyboardType="numeric"
-                placeholder="Slots"
-              />
-              <TextInput
-                style={[styles.input, { width: '12%' }]}
-                value={item.price.toString()}
-                onChangeText={(value) => handleInventoryChange('price', value, item.id)}
-                keyboardType="numeric"
-                placeholder="Price"
-              />
+        <View style={styles.row}>
+          <View style={styles.column}>
+            <Text style={styles.sectionHeader}>
+              Inventory ({
+              updatedInventory.reduce((sum, item) => sum + (item.slots || 0), 0)}/{10 + updatedCharacter?.strength
+              })
+            </Text>
+            <View style={styles.row}>
+              <Text style={[styles.label, { textAlign: 'center', width: '36%' }]}>Name</Text>
+              <Text style={[styles.label, { textAlign: 'center', width: '36%' }]}>Notes</Text>
+              <Text style={[styles.label, { textAlign: 'center', width: '12%' }]}>Slots</Text>
+              <Text style={[styles.label, { textAlign: 'center', width: '12%' }]}>Price</Text>
             </View>
-          ))}
+            {updatedInventory.map((item, index) => (
+              <View key={item.id} style={styles.row}>
+                <TextInput
+                  style={[styles.input, { width: '36%' }]}
+                  value={item.name}
+                  onChangeText={(value) => handleInventoryChange('name', value, item.id)}
+                  placeholder="Name"
+                />
+                <TextInput
+                  style={[styles.input, { width: '36%' }]}
+                  value={item.notes}
+                  onChangeText={(value) => handleInventoryChange('notes', value, item.id)}
+                  placeholder="Notes"
+                />
+                <TextInput
+                  style={[styles.input, { width: '12%' }]}
+                  value={item.slots.toString()}
+                  onChangeText={(value) => handleInventoryChange('slots', value, item.id)}
+                  keyboardType="numeric"
+                  placeholder="Slots"
+                />
+                <TextInput
+                  style={[styles.input, { width: '12%' }]}
+                  value={item.price.toString()}
+                  onChangeText={(value) => handleInventoryChange('price', value, item.id)}
+                  keyboardType="numeric"
+                  placeholder="Price"
+                />
+              </View>
+            ))}
+          </View>
         </View>
+
+        <View style={styles.row}>
+          <View style={styles.column}>
+            <Text style={styles.sectionHeader}>
+              Spellbook
+            </Text>
+            <View style={styles.row}>
+              <Text style={[styles.label, { textAlign: 'center', width: '40%' }]}>Name</Text>
+              <Text style={[styles.label, { textAlign: 'center', width: '60%' }]}>Notes</Text>
+            </View>
+            {updatedSpellbook.map((spell, index) => (
+              <View key={spell.id} style={styles.row}>
+                <TextInput
+                  style={[styles.input, { width: '40%' }]}
+                  value={spell.name}
+                  onChangeText={(value) => handleSpellbookChange('name', value, spell.id)}
+                  placeholder="Name"
+                />
+                <TextInput
+                  style={[styles.input, { width: '60%' }]}
+                  value={spell.notes}
+                  onChangeText={(value) => handleSpellbookChange('notes', value, spell.id)}
+                  placeholder="Notes"
+                />
+              </View>
+            ))}
+          </View>
+        </View>
+
         <TouchableOpacity style={styles.saveButton} onPress={validateAndSave}>
           <Text style={styles.saveButtonText}>Save Changes</Text>
         </TouchableOpacity>
+
       </ScrollView>
     </View>
   );
@@ -375,6 +446,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-evenly'
   },
   column: {
+    width: '100%',
     padding:4,
     borderStyle: 'dashed',
     borderWidth: 2,

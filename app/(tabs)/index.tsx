@@ -58,7 +58,7 @@ export default function Index() {
       will: 1,
       description: "",
       biography: "",
-      inventory: [{id: `${Date.now()}`, name: '', notes: '', slots: 0, price: 0}],
+      inventory: [],
       spells: [],
       gold: 0
     };

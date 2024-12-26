@@ -1,4 +1,5 @@
 import { ItemType } from "./ItemType";
+import { SpellType } from "./SpellType";
 
 export type CharacterType = {
     id: string;
@@ -11,6 +12,6 @@ export type CharacterType = {
     description: string;
     biography: string;
     inventory: ItemType[];
-    spells: string[];
+    spells: SpellType[];
     gold: number;
 };
