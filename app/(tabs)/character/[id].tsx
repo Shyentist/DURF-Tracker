@@ -441,8 +441,8 @@ const styles = StyleSheet.create({
     width: '100%',
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 3,
-    marginTop: 3,
+    marginBottom: 2,
+    marginTop: 2,
     justifyContent: 'space-evenly'
   },
   column: {
