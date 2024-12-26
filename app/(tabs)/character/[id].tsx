@@ -81,12 +81,13 @@ export default function CharacterDetail() {
 
     // add empty row if necessary
     if (totalSlotsUsed <= maxCargo) {
-      console.log("here")
       updatedItems = [...updatedItems, emptyItem]
+    } else {
+      return
     }
 
     updatedCharacter.inventory = updatedItems
-    
+
     setUpdatedInventory(updatedItems);
     setCharacter(updatedCharacter);
   };
@@ -394,7 +395,7 @@ const styles = StyleSheet.create({
     width: '65%',
     paddingLeft: 4,
     height: 20,
-    borderColor: '#ccc',
+    borderColor: '#ddd',
     borderBottomWidth: 1,
     fontSize: 12,
     paddingBottom: 0,
