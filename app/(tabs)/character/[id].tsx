@@ -12,12 +12,14 @@ import { useLocalSearchParams, useRouter } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Ionicons } from '@expo/vector-icons';
 import { CharacterType } from '@/types/CharacterType';
+import { ItemType } from '@/types/ItemType';
 
 export default function CharacterDetail() {
   const { id } = useLocalSearchParams();
   const [character, setCharacter] = useState<CharacterType | null>(null);
   const [loading, setLoading] = useState(true);
   const [updatedCharacter, setUpdatedCharacter] = useState<CharacterType | null>(null);
+  const [updatedInventory, setUpdatedInventory] = useState<ItemType[] | null>(null);
   const router = useRouter();
 
   useEffect(() => {
@@ -29,6 +31,7 @@ export default function CharacterDetail() {
           const foundCharacter = characters.find((char) => char.id === id);
           setCharacter(foundCharacter || null);
           setUpdatedCharacter(foundCharacter || null);
+          setUpdatedInventory(foundCharacter?.inventory || null);
         }
       } catch (error) {
         console.error('Error fetching character:', error);
@@ -51,10 +54,47 @@ export default function CharacterDetail() {
     }
   };
 
+  const handleInventoryChange = (field: string, value: string, id: string) => {
+    if (!updatedCharacter) return;
+  
+    const emptyItem: ItemType = { id: `${Date.now()}`, name: "", notes: "", slots: 0, price: 0 };
+  
+    if (!updatedInventory) {
+      setUpdatedInventory([emptyItem]);
+      return;
+    }
+
+    let updatedItems = updatedInventory.map((item) =>
+      item.id === id
+        ? { ...item, [field]: field === 'slots' || field === 'price' ? Number(value) : value }
+        : item
+    );
+    
+    const totalSlotsUsed = updatedItems.reduce(
+      (sum, item) => sum + (item.slots || 0),
+      0
+    );
+  
+    const maxCargo = 10 + (updatedCharacter.strength || 0);
+
+    updatedItems = updatedItems.filter((item) => item.name);
+
+    // add empty row if necessary
+    if (totalSlotsUsed <= maxCargo) {
+      console.log("here")
+      updatedItems = [...updatedItems, emptyItem]
+    }
+
+    updatedCharacter.inventory = updatedItems
+    
+    setUpdatedInventory(updatedItems);
+    setCharacter(updatedCharacter);
+  };
+  
   const validateAndSave = async () => {
     if (!updatedCharacter) return;
 
-    const { name, hitdice, strength, dexterity, will, description, biography, xp, gold } = updatedCharacter;
+    const { name, hitdice, strength, dexterity, will, xp, gold } = updatedCharacter;
 
     if (
       !name || 
@@ -128,7 +168,7 @@ export default function CharacterDetail() {
     );
   }
 
-  if (!character || !updatedCharacter) {
+  if (!character || !updatedCharacter || !updatedInventory) {
     return (
       <View style={styles.container}>
         <Text style={styles.header}>Character not found</Text>
@@ -243,46 +283,48 @@ export default function CharacterDetail() {
           </View>
         </View>
 
-        <View style={[styles.column, {width:'100%'}]}>
-          <Text style={styles.sectionHeader}>Inventory ({updatedCharacter?.inventory.length}/{10 + updatedCharacter?.strength})</Text>
+        <View style={[styles.column, { width: '100%' }]}>
+          <Text style={styles.sectionHeader}>
+            Inventory ({
+            updatedInventory.reduce((sum, item) => sum + (item.slots || 0), 0)}/{10 + updatedCharacter?.strength
+            })
+          </Text>
           <View style={styles.row}>
-            <Text style={[styles.label, {textAlign: 'center', width: '36%'}]}>Name</Text>
-            <Text style={[styles.label, {textAlign: 'center', width: '36%'}]}>Notes</Text>
-            <Text style={[styles.label, {textAlign: 'center', width: '12%'}]}>Slots</Text>
-            <Text style={[styles.label, {textAlign: 'center', width: '15%'}]}>Price</Text>
+            <Text style={[styles.label, { textAlign: 'center', width: '36%' }]}>Name</Text>
+            <Text style={[styles.label, { textAlign: 'center', width: '36%' }]}>Notes</Text>
+            <Text style={[styles.label, { textAlign: 'center', width: '12%' }]}>Slots</Text>
+            <Text style={[styles.label, { textAlign: 'center', width: '12%' }]}>Price</Text>
           </View>
-          {updatedCharacter?.inventory.length ? (
-            updatedCharacter.inventory.map((item, index) => (
-              <View key={item.id} style={styles.row}>
-                  <TextInput style={[styles.input, { width: '36%' }]}>Name: {item.name}</TextInput>
-                  <TextInput style={[styles.input, { width: '36%' }]}>Notes: {item.notes}</TextInput>
-                  <TextInput style={[styles.input, { width: '12%' }]}>Slots: {item.slots}</TextInput>
-                  <TextInput style={[styles.input, { width: '15%' }]}>Price: {item.price} GP</TextInput>
-              </View>
-            ))
-          ) : (
-            
-        <View style={styles.row}>
-          <TextInput
+          {updatedInventory.map((item, index) => (
+            <View key={item.id} style={styles.row}>
+              <TextInput
                 style={[styles.input, { width: '36%' }]}
+                value={item.name}
+                onChangeText={(value) => handleInventoryChange('name', value, item.id)}
                 placeholder="Name"
               />
-          <TextInput
+              <TextInput
                 style={[styles.input, { width: '36%' }]}
+                value={item.notes}
+                onChangeText={(value) => handleInventoryChange('notes', value, item.id)}
                 placeholder="Notes"
               />
-          <TextInput
+              <TextInput
                 style={[styles.input, { width: '12%' }]}
+                value={item.slots.toString()}
+                onChangeText={(value) => handleInventoryChange('slots', value, item.id)}
                 keyboardType="numeric"
                 placeholder="Slots"
               />
-          <TextInput
+              <TextInput
                 style={[styles.input, { width: '12%' }]}
+                value={item.price.toString()}
+                onChangeText={(value) => handleInventoryChange('price', value, item.id)}
                 keyboardType="numeric"
                 placeholder="Price"
               />
-        </View>
-          )}
+            </View>
+          ))}
         </View>
         <TouchableOpacity style={styles.saveButton} onPress={validateAndSave}>
           <Text style={styles.saveButtonText}>Save Changes</Text>
@@ -326,7 +368,7 @@ const styles = StyleSheet.create({
   row: {
     width: '100%',
     flexDirection: 'row',
-    alignItems: 'flex-end',
+    alignItems: 'center',
     marginBottom: 3,
     marginTop: 3,
     justifyContent: 'space-evenly'
@@ -352,7 +394,7 @@ const styles = StyleSheet.create({
     width: '65%',
     paddingLeft: 4,
     height: 20,
-    borderColor: '#ddd',
+    borderColor: '#ccc',
     borderBottomWidth: 1,
     fontSize: 12,
     paddingBottom: 0,
