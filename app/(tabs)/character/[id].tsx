@@ -26,36 +26,35 @@ export default function CharacterDetail() {
   
   const emptySpell: SpellType = { id: `${Date.now()}`, name: "", notes: ""};
   const emptyItem: ItemType = { id: `${Date.now()}`, name: "", notes: "", slots: 0, price: 0 };
+  const fetchCharacter = async () => {
+    try {
+      const savedCharacters = await AsyncStorage.getItem('characters');
+      if (savedCharacters) {
+        const characters: CharacterType[] = JSON.parse(savedCharacters);
+        const foundCharacter = characters.find((char) => char.id === id);
+        setCharacter(foundCharacter || null);
+        setUpdatedCharacter(foundCharacter || null);
+
+        if (Array.isArray(foundCharacter?.inventory) && foundCharacter?.inventory.length === 0) {
+          setUpdatedInventory([emptyItem]);
+        } else {
+          setUpdatedInventory(foundCharacter?.inventory || null);
+        }
+        
+        if (Array.isArray(foundCharacter?.spells) && foundCharacter?.spells.length === 0) {
+          setUpdatedSpellbook([emptySpell]);
+        } else {
+          setUpdatedSpellbook(foundCharacter?.spells || null);
+        }
+      }
+    } catch (error) {
+      console.error('Error fetching character:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    const fetchCharacter = async () => {
-      try {
-        const savedCharacters = await AsyncStorage.getItem('characters');
-        if (savedCharacters) {
-          const characters: CharacterType[] = JSON.parse(savedCharacters);
-          const foundCharacter = characters.find((char) => char.id === id);
-          setCharacter(foundCharacter || null);
-          setUpdatedCharacter(foundCharacter || null);
-
-          if (Array.isArray(foundCharacter?.inventory) && foundCharacter?.inventory.length === 0) {
-            setUpdatedInventory([emptyItem]);
-          } else {
-            setUpdatedInventory(foundCharacter?.inventory || null);
-          }
-          
-          if (Array.isArray(foundCharacter?.spells) && foundCharacter?.spells.length === 0) {
-            setUpdatedSpellbook([emptySpell]);
-          } else {
-            setUpdatedSpellbook(foundCharacter?.spells || null);
-          }
-        }
-      } catch (error) {
-        console.error('Error fetching character:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchCharacter();
   }, [id]);
 
@@ -128,6 +127,10 @@ export default function CharacterDetail() {
 
     setUpdatedSpellbook(updatedSpells);
     setCharacter(updatedCharacter);
+  };
+
+  const resetCharacter = async () => {
+    fetchCharacter()
   };
   
   const validateAndSave = async () => {
@@ -217,9 +220,6 @@ export default function CharacterDetail() {
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity style={styles.deleteButton} onPress={deleteCharacter}>
-        <Ionicons name="trash" size={24} color="black" />
-      </TouchableOpacity>
 
       <ScrollView contentContainerStyle={styles.scrollContainer} keyboardShouldPersistTaps={'handled'}>
       <View style={styles.row}>
@@ -331,10 +331,10 @@ export default function CharacterDetail() {
               })
             </Text>
             <View style={styles.row}>
-              <Text style={[styles.label, { textAlign: 'center', width: '36%' }]}>Name</Text>
-              <Text style={[styles.label, { textAlign: 'center', width: '36%' }]}>Notes</Text>
-              <Text style={[styles.label, { textAlign: 'center', width: '12%' }]}>Slots</Text>
-              <Text style={[styles.label, { textAlign: 'center', width: '12%' }]}>Price</Text>
+              <Text style={[styles.label, { width: '36%', paddingLeft: 4 }]}>Name</Text>
+              <Text style={[styles.label, { width: '36%', paddingLeft: 4 }]}>Notes</Text>
+              <Text style={[styles.label, { width: '12%', paddingLeft: 4 }]}>Slots</Text>
+              <Text style={[styles.label, { width: '12%', paddingLeft: 4 }]}>Price</Text>
             </View>
             {updatedInventory.map((item, index) => (
               <View key={item.id} style={styles.row}>
@@ -375,19 +375,19 @@ export default function CharacterDetail() {
               Spellbook
             </Text>
             <View style={styles.row}>
-              <Text style={[styles.label, { textAlign: 'center', width: '40%' }]}>Name</Text>
-              <Text style={[styles.label, { textAlign: 'center', width: '60%' }]}>Notes</Text>
+              <Text style={[styles.label, { width: '36%', paddingLeft: 4 }]}>Name</Text>
+              <Text style={[styles.label, { width: '62%', paddingLeft: 4 }]}>Notes</Text>
             </View>
             {updatedSpellbook.map((spell, index) => (
               <View key={spell.id} style={styles.row}>
                 <TextInput
-                  style={[styles.input, { width: '40%' }]}
+                  style={[styles.input, { width: '36%' }]}
                   value={spell.name}
                   onChangeText={(value) => handleSpellbookChange('name', value, spell.id)}
                   placeholder="Name"
                 />
                 <TextInput
-                  style={[styles.input, { width: '60%' }]}
+                  style={[styles.input, { width: '62%' }]}
                   value={spell.notes}
                   onChangeText={(value) => handleSpellbookChange('notes', value, spell.id)}
                   placeholder="Notes"
@@ -397,9 +397,20 @@ export default function CharacterDetail() {
           </View>
         </View>
 
-        <TouchableOpacity style={styles.saveButton} onPress={validateAndSave}>
-          <Text style={styles.saveButtonText}>Save Changes</Text>
-        </TouchableOpacity>
+        <View style={[styles.row, {justifyContent: 'space-between'}]}>
+          <TouchableOpacity style={[styles.saveAndResetButton, {flexDirection: 'row', justifyContent: 'space-evenly'}]} onPress={validateAndSave}>
+            <Ionicons name="save" size={20} color="black" />
+            <Text style={styles.saveAndResetButtonText}>Save</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={[styles.saveAndResetButton, {flexDirection: 'row', justifyContent: 'space-evenly'}]} onPress={resetCharacter}>
+            <Ionicons name="return-up-back-outline" size={20} color="black" />
+            <Text style={styles.saveAndResetButtonText}>Reset</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={[styles.deleteButton, {flexDirection: 'row', justifyContent: 'space-evenly'}]} onPress={deleteCharacter}>
+            <Ionicons name="trash" size={20} color="#FFDE21" />
+            <Text style={styles.deleteButtonText}>Delete</Text>
+          </TouchableOpacity>
+        </View>
 
       </ScrollView>
     </View>
@@ -416,23 +427,6 @@ const styles = StyleSheet.create({
     marginBottom: 4,
     borderColor: '#ddd',
     borderBottomWidth: 1,
-  },
-  deleteButton: {
-    position: 'absolute',
-    top: 20,
-    right: 20,
-    width: 60,
-    height: 60,
-    borderRadius: 30,
-    backgroundColor: '#FFDE21',
-    justifyContent: 'center',
-    alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.3,
-    shadowRadius: 3,
-    elevation: 5, // for Android shadow
-    zIndex: 1,
   },
   scrollContainer: {
     paddingBottom: 20,
@@ -473,30 +467,37 @@ const styles = StyleSheet.create({
     paddingBottom: 0,
     paddingTop: 0
   },
-  saveButton: {
+  saveAndResetButton: {
     backgroundColor: '#FFDE21',
     paddingVertical: 10,
-    paddingHorizontal: 20,
+    paddingHorizontal: 10,
     borderRadius: 10,
     alignItems: 'center',
     justifyContent: 'center',
-    marginTop: 20,
+    width: '30%'
   },
-  saveButtonText: {
+  saveAndResetButtonText: {
     color: 'black',
-    fontSize: 16,
+    fontSize: 12,
+    fontWeight: 'bold',
+  },
+  deleteButton: {
+    backgroundColor: 'black',
+    paddingVertical: 10,
+    paddingHorizontal: 10,
+    borderRadius: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: '30%'
+  },
+  deleteButtonText: {
+    color: '#FFDE21',
+    fontSize: 12,
     fontWeight: 'bold',
   },
   sectionHeader: {
     fontSize: 14,
     fontWeight: 'bold'
-  },
-  deleteItemButton: {
-    marginLeft: 10,
-    padding: 5,
-  },
-  editIcon: {
-    marginLeft: 8,
   }
   
 });
