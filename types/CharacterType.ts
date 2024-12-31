@@ -14,4 +14,5 @@ export type CharacterType = {
     inventory: ItemType[];
     spells: SpellType[];
     gold: number;
+    img: string
 };

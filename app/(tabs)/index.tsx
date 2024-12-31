@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
-import { Text, StyleSheet, View, TouchableOpacity, FlatList } from 'react-native';
+import { Text, StyleSheet, View, TouchableOpacity, FlatList, Image } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Ionicons } from '@expo/vector-icons';
 import { Link, useFocusEffect } from 'expo-router';
 
 import { CharacterType } from '@/types/CharacterType';
@@ -50,7 +49,7 @@ export default function Index() {
   const handlePress = async () => {    
     const newCharacter: CharacterType = {
       id: `${Date.now()}`,
-      name: 'New Character',
+      name: "New Character",
       hitdice: 1,
       xp: 0,
       strength: 1,
@@ -60,7 +59,8 @@ export default function Index() {
       biography: "",
       inventory: [],
       spells: [],
-      gold: 0
+      gold: 0,
+      img: "@/assets/images/newCharacter.jpg"
     };
 
     try {
@@ -79,22 +79,24 @@ export default function Index() {
 
   // render a list containing each character to be loaded in the view
   const renderItem = ({ item }: { item: CharacterType }) => (
-    <View style={styles.characterCard}>
-      <Link href={`./character/${item.id}`}>
-        <View>
-          <View style={styles.iconContainer}>
-            <Ionicons name="person" size={30} color="black" />
-          </View>
-          <Text style={styles.characterName}>{item.name}</Text>
-        </View>
-      </Link>
-    </View>
+    <Link href={`./character/${item.id}`} asChild>
+      <TouchableOpacity style={styles.characterCard}>
+        <Image
+          source={require('@/assets/images/newCharacter.png')}
+          style={styles.characterImage}
+          resizeMode="contain"
+        />
+        <Text style={styles.characterName}>{item.name}</Text>
+      </TouchableOpacity>
+    </Link>
   );
 
   const renderNoCharacters = () => (
-    <Text>
-      To create a new character, press the + button.
-    </Text>
+    <View style={styles.emptyContainer}>
+      <Text style={styles.text}>
+        To create a new character, press the + button.
+      </Text>
+    </View>
   );
 
   return (
@@ -118,12 +120,11 @@ export default function Index() {
 
 const styles = StyleSheet.create({
   container: {
+    padding: 6,
     flex: 1,
     justifyContent: 'center',
-    alignItems: 'center',
-    paddingTop: 20,
-  }
-  ,
+    alignItems: 'center'
+  },
   text: {
     fontFamily: 'RobotoSlab',
     fontSize: 16,
@@ -131,33 +132,25 @@ const styles = StyleSheet.create({
   },
   characterList: {
     width: '100%',
-    paddingHorizontal: 20,
   },
   row: {
     justifyContent: 'space-between',
-    marginBottom: 20,
+    marginVertical: 3,
+    width: '100%'
   },
   characterCard: {
-    alignItems: 'center',
-    marginBottom: 20,
-    width: '45%',
-    justifyContent: 'center',
-    //borderRadius: 10, // I'm not sure about this, maybe with other colors
-    //backgroundColor: '#f5f5f5', // as above
-    padding: 10,
-    elevation: 2,
-  },
-  iconContainer: {
-    width: 60,
-    height: 60,
+    borderStyle: 'dashed',
+    borderWidth: 2,
     borderRadius: 10,
-    backgroundColor: '#FFDE21',
+    borderColor: '#ddd',
+    width: '49%',
+    flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
-    alignSelf: 'center',
+    padding: 10,
   },
   characterName: {
-    marginTop: 10,
+    marginTop: 6,
     fontSize: 14,
     fontWeight: 'bold',
     textAlign: 'center',
@@ -182,5 +175,16 @@ const styles = StyleSheet.create({
     fontSize: 32,
     color: 'black',
     paddingBottom: 3 // sub-optimal vertical centering
+  },
+  characterImage: {
+    height: 90,
+    width: 90,
+    borderRadius: 10
+  },
+  emptyContainer: {
+    marginTop: '100%',
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   }
 });

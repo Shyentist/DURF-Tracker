@@ -6,7 +6,8 @@ import {
   ActivityIndicator, 
   Alert, 
   TouchableOpacity, 
-  TextInput
+  TextInput,
+  Image
 } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -14,6 +15,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { CharacterType } from '@/types/CharacterType';
 import { ItemType } from '@/types/ItemType';
 import { SpellType } from '@/types/SpellType';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function CharacterDetail() {
   const { id } = useLocalSearchParams();
@@ -219,21 +221,28 @@ export default function CharacterDetail() {
   }
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
 
       <ScrollView contentContainerStyle={styles.scrollContainer} keyboardShouldPersistTaps={'handled'}>
       <View style={styles.row}>
           <View style={styles.column}>
-            <TextInput
-                  style={styles.header}
-                  value={updatedCharacter?.name || ''}
-                  onChangeText={(value) => handleInputChange('name', value)}
-                  placeholder="Character Name"
-            />
+            <View style={[styles.row, {justifyContent: 'space-around'}]}>
+              <TextInput
+                    style={styles.header}
+                    value={updatedCharacter?.name || ''}
+                    onChangeText={(value) => handleInputChange('name', value)}
+                    placeholder="Character Name"
+              />
+              <Image
+                source={require('@/assets/images/newCharacter.png')}
+                style={styles.characterImage}
+                resizeMode="contain"
+              />
+            </View>
             <View style={styles.row}>
               <Text style={styles.label}>Description</Text>
               <TextInput
-                style={[styles.input, {height: 50}]}
+                style={[styles.input, {height: 42}]}
                 multiline={true}
                 value={updatedCharacter?.description || ''}
                 onChangeText={(value) => handleInputChange('description', value)}
@@ -244,7 +253,7 @@ export default function CharacterDetail() {
             <View style={styles.row}>
               <Text style={styles.label}>Biography</Text>
               <TextInput
-                style={[styles.input, {height: 50}]}
+                style={[styles.input, {height: 42}]}
                 multiline={true}
                 value={updatedCharacter?.biography || ''}
                 onChangeText={(value) => handleInputChange('biography', value)}
@@ -331,10 +340,10 @@ export default function CharacterDetail() {
               })
             </Text>
             <View style={styles.row}>
-              <Text style={[styles.label, { width: '36%', paddingLeft: 4 }]}>Name</Text>
-              <Text style={[styles.label, { width: '36%', paddingLeft: 4 }]}>Notes</Text>
-              <Text style={[styles.label, { width: '12%', paddingLeft: 4 }]}>Slots</Text>
-              <Text style={[styles.label, { width: '12%', paddingLeft: 4 }]}>Price</Text>
+              <Text style={[styles.label, { width: '36%' }]}>Name</Text>
+              <Text style={[styles.label, { width: '36%' }]}>Notes</Text>
+              <Text style={[styles.label, { width: '12%' }]}>Slots</Text>
+              <Text style={[styles.label, { width: '12%' }]}>Price</Text>
             </View>
             {updatedInventory.map((item, index) => (
               <View key={item.id} style={styles.row}>
@@ -375,8 +384,8 @@ export default function CharacterDetail() {
               Spellbook
             </Text>
             <View style={styles.row}>
-              <Text style={[styles.label, { width: '36%', paddingLeft: 4 }]}>Name</Text>
-              <Text style={[styles.label, { width: '62%', paddingLeft: 4 }]}>Notes</Text>
+              <Text style={[styles.label, { width: '36%' }]}>Name</Text>
+              <Text style={[styles.label, { width: '62%' }]}>Notes</Text>
             </View>
             {updatedSpellbook.map((spell, index) => (
               <View key={spell.id} style={styles.row}>
@@ -397,23 +406,23 @@ export default function CharacterDetail() {
           </View>
         </View>
 
-        <View style={[styles.row, {justifyContent: 'space-between'}]}>
-          <TouchableOpacity style={[styles.saveAndResetButton, {flexDirection: 'row', justifyContent: 'space-evenly'}]} onPress={validateAndSave}>
+        <View style={styles.row}>
+          <TouchableOpacity style={[styles.saveResetDeleteButton, { backgroundColor: '#FFDE21' }]} onPress={validateAndSave}>
             <Ionicons name="save" size={20} color="black" />
-            <Text style={styles.saveAndResetButtonText}>Save</Text>
+            <Text style={styles.saveResetDeleteButtonText}>Save</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={[styles.saveAndResetButton, {flexDirection: 'row', justifyContent: 'space-evenly'}]} onPress={resetCharacter}>
+          <TouchableOpacity style={[styles.saveResetDeleteButton, { backgroundColor: '#FFDE21' }]} onPress={resetCharacter}>
             <Ionicons name="return-up-back-outline" size={20} color="black" />
-            <Text style={styles.saveAndResetButtonText}>Reset</Text>
+            <Text style={styles.saveResetDeleteButtonText}>Reset</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={[styles.deleteButton, {flexDirection: 'row', justifyContent: 'space-evenly'}]} onPress={deleteCharacter}>
+          <TouchableOpacity style={[styles.saveResetDeleteButton, { backgroundColor: 'black' }]} onPress={deleteCharacter}>
             <Ionicons name="trash" size={20} color="#FFDE21" />
-            <Text style={styles.deleteButtonText}>Delete</Text>
+            <Text style={[styles.saveResetDeleteButtonText, { color: '#FFDE21' }]}>Delete</Text>
           </TouchableOpacity>
         </View>
 
       </ScrollView>
-    </View>
+    </SafeAreaView>
   );
 }
 
@@ -422,11 +431,16 @@ const styles = StyleSheet.create({
     padding: 6,
   },
   header: {
+    width: '50%',
     fontSize: 20,
     fontWeight: 'bold',
-    marginBottom: 4,
     borderColor: '#ddd',
     borderBottomWidth: 1,
+  },
+  characterImage: {
+    width: '30%',
+    aspectRatio: 1,
+    borderRadius: 10,
   },
   scrollContainer: {
     paddingBottom: 20,
@@ -435,63 +449,42 @@ const styles = StyleSheet.create({
     width: '100%',
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 2,
-    marginTop: 2,
-    justifyContent: 'space-evenly'
+    marginVertical: 3,
+    justifyContent: 'space-between'
   },
   column: {
     width: '100%',
-    padding:4,
+    paddingHorizontal:8,
     borderStyle: 'dashed',
     borderWidth: 2,
     borderRadius: 10,
     borderColor: '#ddd',
     flexDirection: 'column',
     alignItems: 'center',
-    justifyContent: 'space-around',
-    marginBottom: 1
+    justifyContent: 'space-between',
   },
   label: {
     fontWeight: 'bold',
     width: '25%',
-    fontSize: 12,
-    paddingBottom: 0
+    fontSize: 12
   },
   input: {
     width: '65%',
-    paddingLeft: 4,
-    height: 20,
+    padding: 0,
     borderColor: '#ddd',
     borderBottomWidth: 1,
-    fontSize: 12,
-    paddingBottom: 0,
-    paddingTop: 0
+    fontSize: 12
   },
-  saveAndResetButton: {
-    backgroundColor: '#FFDE21',
+  saveResetDeleteButton: {
     paddingVertical: 10,
     paddingHorizontal: 10,
     borderRadius: 10,
     alignItems: 'center',
-    justifyContent: 'center',
-    width: '30%'
+    width: '30%',
+    flexDirection: 'row', 
+    justifyContent: 'space-evenly'
   },
-  saveAndResetButtonText: {
-    color: 'black',
-    fontSize: 12,
-    fontWeight: 'bold',
-  },
-  deleteButton: {
-    backgroundColor: 'black',
-    paddingVertical: 10,
-    paddingHorizontal: 10,
-    borderRadius: 10,
-    alignItems: 'center',
-    justifyContent: 'center',
-    width: '30%'
-  },
-  deleteButtonText: {
-    color: '#FFDE21',
+  saveResetDeleteButtonText: {
     fontSize: 12,
     fontWeight: 'bold',
   },
