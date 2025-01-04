@@ -415,9 +415,9 @@ export default function CharacterDetail() {
             <Ionicons name="return-up-back-outline" size={20} color="black" />
             <Text style={styles.saveResetDeleteButtonText}>Reset</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={[styles.saveResetDeleteButton, { backgroundColor: 'black' }]} onPress={deleteCharacter}>
-            <Ionicons name="trash" size={20} color="#FFDE21" />
-            <Text style={[styles.saveResetDeleteButtonText, { color: '#FFDE21' }]}>Delete</Text>
+          <TouchableOpacity style={[styles.saveResetDeleteButton, { backgroundColor: '#ddd' }]} onPress={deleteCharacter}>
+            <Ionicons name="trash" size={20} color="black" />
+            <Text style={[styles.saveResetDeleteButtonText, { color: 'black' }]}>Delete</Text>
           </TouchableOpacity>
         </View>
 
