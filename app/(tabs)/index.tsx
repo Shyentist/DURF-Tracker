@@ -128,10 +128,10 @@ const styles = StyleSheet.create({
   text: {
     fontFamily: 'RobotoSlab',
     fontSize: 16,
-    textAlign: 'center',
+    textAlign: 'center'
   },
   characterList: {
-    width: '100%',
+    width: '100%'
   },
   row: {
     justifyContent: 'space-between',
@@ -169,7 +169,7 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.3,
     shadowRadius: 3,
-    elevation: 5, // for Android shadow
+    elevation: 5 // for Android shadow
   },
   plusText: {
     fontSize: 32,
