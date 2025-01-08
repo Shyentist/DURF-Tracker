@@ -1,5 +1,7 @@
 import { Text, StyleSheet, View, SafeAreaView, TouchableOpacity, Linking } from "react-native";
 import { Ionicons } from '@expo/vector-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
+import { faBluesky } from '@fortawesome/free-brands-svg-icons'; 
 
 type SocialLinkProps = {
   logo: string;
@@ -51,6 +53,10 @@ export default function Credits() {
         <View style={styles.socials}>
           <SocialLink logo="link" platform="itch.io" link="https://emielboven.itch.io/" />
           <SocialLink logo="logo-mastodon" platform="Mastodon" link="https://mstdn.science/@EmielBoven@dice.camp" />
+        </View>
+        <View style={styles.socials}>
+          <SocialLink logo="logo-discord" platform="discord" link="https://discord.com/invite/SbdEKxMe6V" />
+          <SocialLink logo="link" platform="Bluesky" link="https://bsky.app/profile/emielboven.itch.io" />
         </View>
       </View>
     </SafeAreaView>
