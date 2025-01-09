@@ -16,8 +16,10 @@ import { CharacterType } from '@/types/CharacterType';
 import { ItemType } from '@/types/ItemType';
 import { SpellType } from '@/types/SpellType';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useTranslation } from 'react-i18next';
 
 export default function CharacterDetail() {
+  const { t } = useTranslation();
   const { id } = useLocalSearchParams();
   const [character, setCharacter] = useState<CharacterType | null>(null);
   const [loading, setLoading] = useState(true);
@@ -50,7 +52,7 @@ export default function CharacterDetail() {
         }
       }
     } catch (error) {
-      console.error('Error fetching character:', error);
+      console.error(t('errotFetchingCharacter'), error);
     } finally {
       setLoading(false);
     }
@@ -136,8 +138,9 @@ export default function CharacterDetail() {
   };
   
   const validateAndSave = async () => {
-    if (!updatedCharacter) return;
+    console.log("here")
 
+    if (!updatedCharacter) return;
     const { name, hitdice, strength, dexterity, will, xp, gold } = updatedCharacter;
 
     if (
@@ -149,12 +152,12 @@ export default function CharacterDetail() {
       xp == null || 
       gold == null
     ) {
-      Alert.alert('Validation Error', 'All fields are required.');
+      Alert.alert(t('errorValidation'), t('fillInRequiredFields'));
       return;
     }
 
-    if (isNaN(Number(hitdice)) || isNaN(Number(strength)) || isNaN(Number(dexterity)) || isNaN(Number(will))) {
-      Alert.alert('Validation Error', 'Hit Dice, Strength, Dexterity, and Will must be numbers.');
+    if (isNaN(Number(hitdice)) || isNaN(Number(strength)) || isNaN(Number(dexterity)) || isNaN(Number(will)) || isNaN(Number(xp)) || isNaN(Number(gold))) {
+      Alert.alert(t('errorValidation'), t('fieldsMustBeNumbers'));
       return;
     }
 
@@ -170,21 +173,21 @@ export default function CharacterDetail() {
 
         setCharacter(updatedCharacter);
 
-        router.replace('/(tabs)');
+        router.replace('/');
       }
     } catch (error) {
-      console.error('Error saving character:', error);
+      console.error(t('errorSavingCharacter'), error);
     }
   };
 
   const deleteCharacter = async () => {
     Alert.alert(
-      'Delete Character',
-      `Are you sure you want to delete "${character?.name}"?`,
+      t('deleteCharacter'),
+      t('areYouSure'),
       [
-        { text: 'Cancel', style: 'cancel' },
+        { text: t('cancel'), style: 'cancel' },
         {
-          text: 'Delete',
+          text: t('delete'),
           style: 'destructive',
           onPress: async () => {
             try {
@@ -194,9 +197,9 @@ export default function CharacterDetail() {
                 const updatedCharacters = characters.filter((char) => char.id !== id);
                 await AsyncStorage.setItem('characters', JSON.stringify(updatedCharacters));
               }
-              router.replace('/(tabs)');
+              router.replace('/');
             } catch (error) {
-              console.error('Error deleting character:', error);
+              console.error(t('errorDeletingCharacter'), error);
             }
           },
         },
@@ -215,7 +218,7 @@ export default function CharacterDetail() {
   if (!character || !updatedCharacter || !updatedInventory || !updatedSpellbook) {
     return (
       <View style={styles.container}>
-        <Text style={styles.header}>Character not found</Text>
+        <Text style={styles.header}>{t('characterNotFound')}</Text>
       </View>
     );
   }
@@ -231,7 +234,7 @@ export default function CharacterDetail() {
                     style={styles.header}
                     value={updatedCharacter?.name || ''}
                     onChangeText={(value) => handleInputChange('name', value)}
-                    placeholder="Character Name"
+                    placeholder={t('emptyField')}
               />
               <Image
                 source={require('@/assets/images/newCharacter.png')}
@@ -240,24 +243,24 @@ export default function CharacterDetail() {
               />
             </View>
             <View style={styles.row}>
-              <Text style={styles.label}>Description</Text>
+              <Text style={styles.label}>{t('description')}</Text>
               <TextInput
                 style={[styles.input, {height: 42}]}
                 multiline={true}
                 value={updatedCharacter?.description || ''}
                 onChangeText={(value) => handleInputChange('description', value)}
-                placeholder="Your character's description"
+                placeholder={t('emptyField')}
               />
             </View>
 
             <View style={styles.row}>
-              <Text style={styles.label}>Biography</Text>
+              <Text style={styles.label}>{t('biography')}</Text>
               <TextInput
                 style={[styles.input, {height: 42}]}
                 multiline={true}
                 value={updatedCharacter?.biography || ''}
                 onChangeText={(value) => handleInputChange('biography', value)}
-                placeholder="Your character's biography"
+                placeholder={t('emptyField')}
               />
             </View>
           </View>
@@ -265,68 +268,68 @@ export default function CharacterDetail() {
 
         <View style={[styles.row, {justifyContent: 'space-between'}]}>
           <View style={[styles.column, {width:'49.5%'}]}> 
-            <Text style={styles.sectionHeader}>Attributes</Text>
+            <Text style={styles.sectionHeader}>{t('attributes')}</Text>
             <View style={styles.row}> 
-              <Text style={styles.label}>STR</Text>
+              <Text style={styles.label}>{t('str')}</Text>
               <TextInput
                 style={styles.input}
                 value={updatedCharacter?.strength.toString()}
                 onChangeText={(value) => handleInputChange('strength', value)}
                 keyboardType="numeric"
-                placeholder="Strength"
+                placeholder={t('emptyField')}
               />
             </View>
             <View style={styles.row}>
-              <Text style={styles.label}>DEX</Text>
+              <Text style={styles.label}>{t('dex')}</Text>
               <TextInput
                 style={styles.input}
                 value={updatedCharacter?.dexterity.toString()}
                 onChangeText={(value) => handleInputChange('dexterity', value)}
                 keyboardType="numeric"
-                placeholder="Dexterity"
+                placeholder={t('emptyField')}
               />
             </View>
             <View style={styles.row}>
-              <Text style={styles.label}>WIL</Text>
+              <Text style={styles.label}>{t('wil')}</Text>
               <TextInput
                 style={styles.input}
                 value={updatedCharacter?.will.toString()}
                 onChangeText={(value) => handleInputChange('will', value)}
                 keyboardType="numeric"
-                placeholder="Will"
+                placeholder={t('emptyField')}
               />
             </View>
           </View>
           <View style={[styles.column, {width:'49.5%'}]}>
-            <Text style={styles.sectionHeader}>Progress</Text>
+            <Text style={styles.sectionHeader}>{t('progress')}</Text>
             <View style={styles.row}>
-              <Text style={styles.label}>HD</Text>
+              <Text style={styles.label}>{t('hd')}</Text>
               <TextInput
                 style={styles.input}
                 value={updatedCharacter?.hitdice.toString()}
                 onChangeText={(value) => handleInputChange('hitdice', value)}
                 keyboardType="numeric"
-                placeholder="Hit Dice"
+                placeholder={t('emptyField')}
               />
             </View>
             <View style={styles.row}>
-              <Text style={styles.label}>XP</Text>
+              <Text style={styles.label}>{t('xp')}</Text>
               <TextInput
                 style={styles.input}
                 value={updatedCharacter?.xp.toString()}
                 onChangeText={(value) => handleInputChange('xp', value)}
                 keyboardType="numeric"
-                placeholder="Experience Points"
+                placeholder={t('emptyField')}
               />
             </View>
             <View style={styles.row}>
-              <Text style={styles.label}>GP</Text>
+              <Text style={styles.label}>{t('gp')}</Text>
               <TextInput
                 style={styles.input}
                 value={updatedCharacter?.gold.toString()}
                 onChangeText={(value) => handleInputChange('gold', value)}
                 keyboardType="numeric"
-                placeholder="Gold Pieces"
+                placeholder={t('emptyField')}
               />
             </View>
           </View>
@@ -335,15 +338,15 @@ export default function CharacterDetail() {
         <View style={styles.row}>
           <View style={styles.column}>
             <Text style={styles.sectionHeader}>
-              Inventory ({
+              {t('inventory')} ({
               updatedInventory.reduce((sum, item) => sum + (item.slots || 0), 0)}/{10 + updatedCharacter?.strength
               })
             </Text>
             <View style={styles.row}>
-              <Text style={[styles.label, { width: '36%' }]}>Name</Text>
-              <Text style={[styles.label, { width: '36%' }]}>Notes</Text>
-              <Text style={[styles.label, { width: '12%' }]}>Slots</Text>
-              <Text style={[styles.label, { width: '12%' }]}>Price</Text>
+              <Text style={[styles.label, { width: '36%' }]}>{t('name')}</Text>
+              <Text style={[styles.label, { width: '36%' }]}>{t('notes')}</Text>
+              <Text style={[styles.label, { width: '12%' }]}>{t('slots')}</Text>
+              <Text style={[styles.label, { width: '12%' }]}>{t('price')}</Text>
             </View>
             {updatedInventory.map((item, index) => (
               <View key={item.id} style={styles.row}>
@@ -351,27 +354,27 @@ export default function CharacterDetail() {
                   style={[styles.input, { width: '36%' }]}
                   value={item.name}
                   onChangeText={(value) => handleInventoryChange('name', value, item.id)}
-                  placeholder="Name"
+                  placeholder={t('emptyField')}
                 />
                 <TextInput
                   style={[styles.input, { width: '36%' }]}
                   value={item.notes}
                   onChangeText={(value) => handleInventoryChange('notes', value, item.id)}
-                  placeholder="Notes"
+                  placeholder={t('emptyField')}
                 />
                 <TextInput
                   style={[styles.input, { width: '12%' }]}
                   value={item.slots.toString()}
                   onChangeText={(value) => handleInventoryChange('slots', value, item.id)}
                   keyboardType="numeric"
-                  placeholder="Slots"
+                  placeholder={t('emptyField')}
                 />
                 <TextInput
                   style={[styles.input, { width: '12%' }]}
                   value={item.price.toString()}
                   onChangeText={(value) => handleInventoryChange('price', value, item.id)}
                   keyboardType="numeric"
-                  placeholder="Price"
+                  placeholder={t('emptyField')}
                 />
               </View>
             ))}
@@ -381,11 +384,11 @@ export default function CharacterDetail() {
         <View style={styles.row}>
           <View style={styles.column}>
             <Text style={styles.sectionHeader}>
-              Spellbook
+              {t('spellbook')}
             </Text>
             <View style={styles.row}>
-              <Text style={[styles.label, { width: '36%' }]}>Name</Text>
-              <Text style={[styles.label, { width: '62%' }]}>Notes</Text>
+              <Text style={[styles.label, { width: '36%' }]}>{t('name')}</Text>
+              <Text style={[styles.label, { width: '62%' }]}>{t('notes')}</Text>
             </View>
             {updatedSpellbook.map((spell, index) => (
               <View key={spell.id} style={styles.row}>
@@ -393,13 +396,13 @@ export default function CharacterDetail() {
                   style={[styles.input, { width: '36%' }]}
                   value={spell.name}
                   onChangeText={(value) => handleSpellbookChange('name', value, spell.id)}
-                  placeholder="Name"
+                  placeholder={t('emptyField')}
                 />
                 <TextInput
                   style={[styles.input, { width: '62%' }]}
                   value={spell.notes}
                   onChangeText={(value) => handleSpellbookChange('notes', value, spell.id)}
-                  placeholder="Notes"
+                  placeholder={t('emptyField')}
                 />
               </View>
             ))}
@@ -409,15 +412,15 @@ export default function CharacterDetail() {
         <View style={styles.row}>
           <TouchableOpacity style={[styles.saveResetDeleteButton, { backgroundColor: '#FFDE21' }]} onPress={validateAndSave}>
             <Ionicons name="save" size={20} color="black" />
-            <Text style={styles.saveResetDeleteButtonText}>Save</Text>
+            <Text style={styles.saveResetDeleteButtonText}>{t('save')}</Text>
           </TouchableOpacity>
           <TouchableOpacity style={[styles.saveResetDeleteButton, { backgroundColor: '#FFDE21' }]} onPress={resetCharacter}>
             <Ionicons name="return-up-back-outline" size={20} color="black" />
-            <Text style={styles.saveResetDeleteButtonText}>Reset</Text>
+            <Text style={styles.saveResetDeleteButtonText}>{t('reset')}</Text>
           </TouchableOpacity>
           <TouchableOpacity style={[styles.saveResetDeleteButton, { backgroundColor: '#ddd' }]} onPress={deleteCharacter}>
             <Ionicons name="trash" size={20} color="black" />
-            <Text style={[styles.saveResetDeleteButtonText, { color: 'black' }]}>Delete</Text>
+            <Text style={[styles.saveResetDeleteButtonText, { color: 'black' }]}>{t('delete')}</Text>
           </TouchableOpacity>
         </View>
 
@@ -432,7 +435,7 @@ const styles = StyleSheet.create({
   },
   header: {
     width: '50%',
-    fontSize: 20,
+    fontSize: 16,
     fontWeight: 'bold',
     borderColor: '#ddd',
     borderBottomWidth: 1,

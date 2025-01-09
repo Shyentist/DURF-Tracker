@@ -1,7 +1,6 @@
 import { Text, StyleSheet, View, SafeAreaView, TouchableOpacity, Linking } from "react-native";
 import { Ionicons } from '@expo/vector-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
-import { faBluesky } from '@fortawesome/free-brands-svg-icons'; 
+import { useTranslation } from 'react-i18next';
 
 type SocialLinkProps = {
   logo: string;
@@ -9,7 +8,11 @@ type SocialLinkProps = {
   link: string;
 };
 
-const SocialLink = ({ logo, platform, link }: SocialLinkProps) => (
+const SocialLink = ({ logo, platform, link }: SocialLinkProps) => {
+
+  const { t } = useTranslation();
+  
+  return (
   <TouchableOpacity
     style={styles.socialButton}
     onPress={async () => {
@@ -17,22 +20,25 @@ const SocialLink = ({ logo, platform, link }: SocialLinkProps) => (
       if (supported) {
         await Linking.openURL(link);
       } else {
-        console.error(`Unsupported URL: ${link}`);
+        console.error(t('linkError'), link);
       }
     }}
   >
     <Ionicons name={logo as keyof typeof Ionicons.glyphMap} size={20} color="black" />
     <Text style={styles.socialText}>{platform}</Text>
   </TouchableOpacity>
-);
+);}
 
 
 export default function Credits() {
+
+  const { t } = useTranslation();
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.section}>
         <Text style={styles.text}>
-          <Text style={styles.boldText}>DURF Tracker</Text> by{" "}
+          <Text style={styles.boldText}>DURF Tracker</Text> {t('by')}{' '}
           <Text style={styles.boldText}>Pasquale "Pico" Buonomo</Text>
         </Text>
         <View style={styles.socials}>
@@ -47,7 +53,7 @@ export default function Credits() {
 
       <View style={styles.section}>
         <Text style={styles.text}>
-          <Text style={styles.boldText}>DURF</Text> by{" "}
+          <Text style={styles.boldText}>DURF</Text> {t('by')}{' '}
           <Text style={styles.boldText}>Emiel Boven</Text>
         </Text>
         <View style={styles.socials}>

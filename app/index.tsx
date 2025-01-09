@@ -3,11 +3,11 @@ import { Text, StyleSheet, View, TouchableOpacity, FlatList, Image } from 'react
 import { SafeAreaView } from 'react-native-safe-area-context';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Link, useFocusEffect } from 'expo-router';
+import { useTranslation } from 'react-i18next';
 
 import { CharacterType } from '@/types/CharacterType';
 
 export default function Index() {
-  const [characters, setCharacters] = useState<CharacterType[]>([]);
 
   /* for testing purposes, button to delete all characters 
   
@@ -27,6 +27,10 @@ export default function Index() {
       
   */
 
+  const { t } = useTranslation();
+
+  const [characters, setCharacters] = useState<CharacterType[]>([]);
+
   const loadCharacters = async () => {
     try {
       setCharacters([]);
@@ -35,7 +39,7 @@ export default function Index() {
         setCharacters(JSON.parse(savedCharacters));
       }
     } catch (error) {
-      console.error('Error loading characters:', error);
+      console.error(t('errorLoadingCharacters'), error);
     }
   };
 
@@ -49,7 +53,7 @@ export default function Index() {
   const handlePress = async () => {    
     const newCharacter: CharacterType = {
       id: `${Date.now()}`,
-      name: "New Character",
+      name: t('defaultCharacterName'),
       hitdice: 1,
       xp: 0,
       strength: 1,
@@ -73,7 +77,7 @@ export default function Index() {
 
       setCharacters(charactersArray);
     } catch (error) {
-      console.error('Error saving character:', error);
+      console.error(t('errorSavingCharacter'), error);
     }
   };
 
@@ -94,7 +98,7 @@ export default function Index() {
   const renderNoCharacters = () => (
     <View style={styles.emptyContainer}>
       <Text style={styles.text}>
-        To create a new character, press the + button.
+        <Text style={styles.text}>{t('noCharacters')}</Text>
       </Text>
     </View>
   );
