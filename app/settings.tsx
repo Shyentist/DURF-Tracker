@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -7,7 +7,8 @@ import {
   FlatList,
   StyleSheet,
 } from "react-native";
-import i18n from '../src/i18n/i18n';
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import i18n from "../src/i18n/i18n";
 
 export default function Settings() {
   const [language, setLanguage] = useState(i18n.language);
@@ -18,10 +19,23 @@ export default function Settings() {
     { code: "it", label: "Italiano" },
   ];
 
-  const handleLanguageChange = (selectedLanguage: string) => {
+  // Load saved language on component mount
+  useEffect(() => {
+    const loadLanguage = async () => {
+      const savedLanguage = await AsyncStorage.getItem("language");
+      if (savedLanguage) {
+        setLanguage(savedLanguage);
+        i18n.changeLanguage(savedLanguage);
+      }
+    };
+    loadLanguage();
+  }, []);
+
+  const handleLanguageChange = async (selectedLanguage: string) => {
     setLanguage(selectedLanguage);
     i18n.changeLanguage(selectedLanguage);
     setIsDropdownOpen(false);
+    await AsyncStorage.setItem("language", selectedLanguage);
   };
 
   return (
