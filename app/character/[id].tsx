@@ -438,7 +438,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
     borderColor: '#ddd',
-    borderBottomWidth: 1,
+    borderBottomWidth: 1
   },
   characterImage: {
     width: '30%',
@@ -489,7 +489,7 @@ const styles = StyleSheet.create({
   },
   saveResetDeleteButtonText: {
     fontSize: 12,
-    fontWeight: 'bold',
+    fontWeight: 'bold'
   },
   sectionHeader: {
     fontSize: 14,

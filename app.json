@@ -6,7 +6,7 @@
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "myapp",
-    "userInterfaceStyle": "automatic",
+    "userInterfaceStyle": "light",
     "newArchEnabled": true,
     "ios": {
       "supportsTablet": true
@@ -15,7 +15,8 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.shyentist.DURFTracker"
     },
     "web": {
       "bundler": "metro",
@@ -33,22 +34,18 @@
           "backgroundColor": "#ffffff"
         }
       ],
-      [
-        "expo-font",
-        {
-          "fonts": [
-            "./assets/fonts/RobotoSlab-Bold.ttf",
-            "./assets/fonts/RobotoSlab-Light.ttf",
-            "./assets/fonts/RobotoSlab-Thin.ttf",
-            "./assets/fonts/RobotoSlab-Regular.ttf",
-            "./assets/fonts/SpaceMono-Regular.ttf"
-          ]
-        }
-      ],
       "expo-localization"
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "c08e6d18-b49b-450f-bc2d-1fccfd8b03fb"
+      }
     }
   }
 }

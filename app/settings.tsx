@@ -91,7 +91,6 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 18,
     marginBottom: 20,
-    fontFamily: "RobotoSlab-Regular",
   },
   dropdown: {
     borderWidth: 1,
@@ -102,7 +101,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   dropdownText: {
-    fontSize: 16,
+    fontSize: 16
   },
   modalOverlay: {
     flex: 1,

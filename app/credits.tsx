@@ -87,12 +87,11 @@ const styles = StyleSheet.create({
     borderColor: "#ddd",
   },
   text: {
-    fontFamily: "RobotoSlab",
     fontSize: 16,
     textAlign: "center",
   },
   boldText: {
-    fontWeight: "bold",
+    fontWeight: "bold"
   },
   socials: {
     width: '100%',
@@ -103,7 +102,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-evenly",
   },
   socialText: {
-    fontFamily: "RobotoSlab",
+    fontFamily: "RobotoSlab-Bold",
     fontSize: 14,
     fontWeight: 'bold'
   },

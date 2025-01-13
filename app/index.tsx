@@ -6,6 +6,7 @@ import { Link, useFocusEffect } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 
 import { CharacterType } from '@/types/CharacterType';
+import "../src/i18n/i18n";
 
 export default function Index() {
 
@@ -130,7 +131,6 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   },
   text: {
-    fontFamily: 'RobotoSlab',
     fontSize: 16,
     textAlign: 'center'
   },
@@ -157,7 +157,7 @@ const styles = StyleSheet.create({
     marginTop: 6,
     fontSize: 14,
     fontWeight: 'bold',
-    textAlign: 'center',
+    textAlign: 'center'
   },
   floatingButton: {
     position: 'absolute', // always on top of other elements on screen
