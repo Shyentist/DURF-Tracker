@@ -17,6 +17,7 @@ export default function Settings() {
   const languages = [
     { code: "en", label: "English" },
     { code: "it", label: "Italiano" },
+    { code: "eo", label: "Esperanto" },
   ];
 
   // Load saved language on component mount
