@@ -8,7 +8,7 @@
     "characterNotFound": "Character not found",
     "emptyField": "N/A",
     "fillInRequiredFields": "Please fill in all required fields",
-    "fieldsMustBeNumbers": "Hit Dice, Strength, Dexterity, Will, Experience Points, and Gold Pieces must be numbers.",
+    "fieldsMustBeNumbers": "Hit Dice, Strength, Dexterity, Willpower, Experience Points, and Gold Pieces must be numbers.",
     "by": "by",
     "errorUnsupportedUrl": "Unsupported URL:",
     "errorFetchingCharacter": "Error fetching character:",
