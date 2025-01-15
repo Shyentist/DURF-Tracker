@@ -1,6 +1,7 @@
 import { Text, StyleSheet, View, SafeAreaView, TouchableOpacity, Linking } from "react-native";
 import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
+import { useLanguage } from "../src/hooks/useLanguage";
 
 type SocialLinkProps = {
   logo: string;
@@ -9,6 +10,7 @@ type SocialLinkProps = {
 };
 
 const SocialLink = ({ logo, platform, link }: SocialLinkProps) => {
+  useLanguage();
 
   const { t } = useTranslation();
   

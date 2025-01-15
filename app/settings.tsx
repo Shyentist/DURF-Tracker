@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -7,11 +7,14 @@ import {
   FlatList,
   StyleSheet,
 } from "react-native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import i18n from "../src/i18n/i18n";
+import { useTranslation } from 'react-i18next';
+import { useLanguage } from "../src/hooks/useLanguage";
 
 export default function Settings() {
-  const [language, setLanguage] = useState(i18n.language);
+  const { language, changeLanguage } = useLanguage();
+
+  const { t } = useTranslation();
+
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   const languages = [
@@ -20,28 +23,14 @@ export default function Settings() {
     { code: "eo", label: "Esperanto" },
   ];
 
-  // Load saved language on component mount
-  useEffect(() => {
-    const loadLanguage = async () => {
-      const savedLanguage = await AsyncStorage.getItem("language");
-      if (savedLanguage) {
-        setLanguage(savedLanguage);
-        i18n.changeLanguage(savedLanguage);
-      }
-    };
-    loadLanguage();
-  }, []);
-
   const handleLanguageChange = async (selectedLanguage: string) => {
-    setLanguage(selectedLanguage);
-    i18n.changeLanguage(selectedLanguage);
+    changeLanguage(selectedLanguage);
     setIsDropdownOpen(false);
-    await AsyncStorage.setItem("language", selectedLanguage);
   };
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>{i18n.t("settings.selectLanguage")}</Text>
+      <Text style={styles.title}>{t("settings.selectLanguage")}</Text>
       <TouchableOpacity
         style={styles.dropdown}
         onPress={() => setIsDropdownOpen(!isDropdownOpen)}

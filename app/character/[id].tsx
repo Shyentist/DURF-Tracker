@@ -17,8 +17,10 @@ import { ItemType } from '@/types/ItemType';
 import { SpellType } from '@/types/SpellType';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
+import { useLanguage } from "../../src/hooks/useLanguage";
 
 export default function CharacterDetail() {
+  useLanguage();
   const { t } = useTranslation();
   const { id } = useLocalSearchParams();
   const [character, setCharacter] = useState<CharacterType | null>(null);

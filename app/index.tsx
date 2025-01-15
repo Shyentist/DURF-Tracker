@@ -6,9 +6,11 @@ import { Link, useFocusEffect } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 
 import { CharacterType } from '@/types/CharacterType';
+import { useLanguage } from "../src/hooks/useLanguage";
 import "../src/i18n/i18n";
 
 export default function Index() {
+  useLanguage();
 
   /* for testing purposes, button to delete all characters 
   

@@ -1,9 +1,12 @@
 import { Tabs } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
+import { useLanguage } from "../src/hooks/useLanguage";
 import "../src/i18n/i18n";
 
 export default function TabLayout() {
+  useLanguage();
+  
   const { t } = useTranslation();
 
   return (
