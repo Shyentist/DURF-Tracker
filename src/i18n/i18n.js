@@ -3,7 +3,7 @@ import { initReactI18next } from 'react-i18next';
 import * as Localization from 'expo-localization';
 import en from '../../locales/en/translation.json';
 import it from '../../locales/it/translation.json';
-import eo from "../locales/eo/translation.json";
+import eo from "../../locales/eo/translation.json";
 
 // Retrieve the array of locales
 const locales = Localization.getLocales();
