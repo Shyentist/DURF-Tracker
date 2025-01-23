@@ -437,7 +437,7 @@ const styles = StyleSheet.create({
   },
   header: {
     width: '50%',
-    fontSize: 16,
+    fontSize: 15,
     fontWeight: 'bold',
     borderColor: '#ddd',
     borderBottomWidth: 1
@@ -471,14 +471,14 @@ const styles = StyleSheet.create({
   label: {
     fontWeight: 'bold',
     width: '25%',
-    fontSize: 12
+    fontSize: 11
   },
   input: {
     width: '65%',
     padding: 0,
     borderColor: '#ddd',
     borderBottomWidth: 1,
-    fontSize: 12
+    fontSize: 11
   },
   saveResetDeleteButton: {
     paddingVertical: 10,
@@ -490,11 +490,11 @@ const styles = StyleSheet.create({
     justifyContent: 'space-evenly'
   },
   saveResetDeleteButtonText: {
-    fontSize: 12,
+    fontSize: 11,
     fontWeight: 'bold'
   },
   sectionHeader: {
-    fontSize: 14,
+    fontSize: 13,
     fontWeight: 'bold'
   }
   

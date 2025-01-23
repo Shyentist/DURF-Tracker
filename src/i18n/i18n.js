@@ -4,6 +4,7 @@ import * as Localization from 'expo-localization';
 import en from '../../locales/en/translation.json';
 import it from '../../locales/it/translation.json';
 import eo from "../../locales/eo/translation.json";
+import es from "../../locales/es/translation.json";
 
 // Retrieve the array of locales
 const locales = Localization.getLocales();
@@ -21,6 +22,7 @@ i18n
       en: { translation: en },
       it: { translation: it },
       eo: { translation: eo },
+      es: { translation: es },
     },
     interpolation: {
       escapeValue: false, // React already escapes values to prevent XSS

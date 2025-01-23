@@ -21,6 +21,7 @@ export default function Settings() {
     { code: "en", label: "English" },
     { code: "it", label: "Italiano" },
     { code: "eo", label: "Esperanto" },
+    { code: "es", label: "Español (Castellano)" },
   ];
 
   const handleLanguageChange = async (selectedLanguage: string) => {
